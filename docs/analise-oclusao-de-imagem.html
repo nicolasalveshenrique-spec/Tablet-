@@ -429,6 +429,12 @@
 
   <p>Em <strong>esconder tudo</strong>, os rótulos vizinhos somem junto. Você precisa saber a estrutura a partir da forma e da posição, não da eliminação. Em <strong>esconder uma</strong>, os vizinhos ficam à vista e passam a ser a pista legítima.</p>
 
+  <div class="block callout regra">
+    <span class="callout-label">A pista que ninguém percebe estar dando</span>
+    <p><strong>A largura da máscara é informação.</strong> Numa imagem com "Ponte" e "Fosfofrutoquinase-1" ocluídas, o retângulo curto só pode ser o primeiro — e o cartão fica respondível pela geometria, sem saber anatomia. Pior: a revisão vira treino de reconhecer o formato do borrão, que é uma habilidade sem uso nenhum na prova.</p>
+    <p>Máscaras do mesmo tamanho eliminam isso. A única pista que sobra é a posição, que é exatamente a que o cartão deveria estar cobrando. É o padrão na ferramenta, e o efeito colateral está previsto: ao igualar, a máscara da palavra curta cresce e pode encostar no rótulo vizinho — o contrato avisa quando isso passa de 25%.</p>
+  </div>
+
   <p>A escolha não é de gosto — depende de <em>o que é a pista que você quer treinar</em>:</p>
 
   <div class="tabela-envolucro">
@@ -572,7 +578,13 @@
 <section>
   <div class="sec-head"><span class="sec-num">08</span><h2>O que já está pronto</h2></div>
 
-  <p>Está no repositório <code>tablet-</code>, na branch <code>claude/image-occlusion-cards-study-6qa2e4</code>. Chama-se <code>ocluir</code>, roda no Windows 10, e tem 84 testes passando — incluindo um AnkiConnect falso que confere o corpo exato das requisições, com a interface do Anki em inglês e em português.</p>
+  <p>Está no repositório <code>tablet-</code>, na branch <code>claude/image-occlusion-cards-study-6qa2e4</code>. Chama-se <code>ocluir</code>, roda no Windows 10, e tem 146 testes passando.</p>
+
+  <div class="block callout">
+    <span class="callout-label">O que foi verificado, e o que não foi</span>
+    <p><strong>Verificado:</strong> o <code>.apkg</code> é escrito por uma implementação sem dependência nenhuma e <em>lido</em> pela biblioteca oficial do Anki (26.08), que confirma notas, cartões, imagens, decks, tags e o notetype nativo de oclusão. Escrever com uma implementação e ler com outra, independente, é o que dá confiança de que o arquivo chega inteiro.</p>
+    <p><strong>Não verificado:</strong> a importação num AnkiDroid de verdade — não há aparelho Android aqui. O AnkiDroid usa a mesma engine do Anki desde a versão 2.17, então a expectativa é fundamentada, mas é expectativa, não teste. O primeiro pacote que você importar é o teste que falta.</p>
+  </div>
 
   <pre><code>python -m ocluir ler slide.png --titulo "Divisões do encéfalo" \
     --pergunta divisoes-encefalo --disciplina anatomia --aula 2026-08-10
@@ -604,24 +616,27 @@
 <section>
   <div class="sec-head"><span class="sec-num">09</span><h2>Os dois aparelhos: o Android captura, o Windows produz</h2></div>
 
-  <p>Vale dizer o que <em>não</em> compensa construir. O AnkiDroid já tem editor de oclusão nativo, e ele é bom — desenhar retângulo com o dedo numa tela grande é mais confortável que com mouse. Construir um app Android para desenhar máscaras seria refazer, pior, algo que já existe e é gratuito.</p>
-
-  <p>O que falta no tablet não é a interface de desenhar. É tudo em volta: OCR preciso, deck e tags certos, checagem de duplicata, vínculo com a pergunta lógica, e o teto de quantidade. Isso é trabalho de teclado e de arquivo, e mora no Windows.</p>
+  <p>Existem <strong>dois caminhos</strong>, e a razão de não ser um só é técnica e definitiva: <strong>o AnkiConnect não existe no AnkiDroid.</strong> Ele é um complemento do Anki de computador, e complementos são código Python que o app Android não roda. Não é limitação temporária nem coisa que se resolva instalando outra peça.</p>
 
   <div class="tabela-envolucro">
     <table>
-      <thead><tr><th></th><th>Android (tablet)</th><th>Windows 10</th></tr></thead>
+      <thead><tr><th></th><th>Caminho A — computador</th><th>Caminho B — tablet</th></tr></thead>
       <tbody>
-        <tr><td>Papel</td><td>capturar e revisar</td><td>produzir</td></tr>
-        <tr><td>Como</td><td>print da aula, recortado na hora</td><td><code>ocluir</code> + AnkiConnect</td></tr>
-        <tr><td>Anki</td><td>AnkiDroid, revisão e ajuste fino</td><td>Anki desktop, criação</td></tr>
-        <tr><td>Ponte</td><td colspan="2">a pasta do Google Drive que você já usa para o vault</td></tr>
+        <tr><td>Destino</td><td>Anki no Windows 10</td><td>AnkiDroid, direto</td></tr>
+        <tr><td>Como entra</td><td>AnkiConnect, na hora</td><td>arquivo <code>.apkg</code>, importado</td></tr>
+        <tr><td>Precisa de computador</td><td>sim</td><td><strong>não</strong></td></tr>
+        <tr><td>Acha os rótulos com</td><td>Tesseract (OCR)</td><td>análise de imagem, sem OCR</td></tr>
+        <tr><td>Comando</td><td><code>ocluir enviar</code></td><td><code>ocluir empacotar</code></td></tr>
       </tbody>
     </table>
   </div>
 
-  <h3>A ponte, concretamente</h3>
-  <p>Você já mantém o vault no Drive, então não há infraestrutura nova a inventar. Crie <code>Aulas/Capturas/</code> no Drive. No tablet, o print vai para lá pelo menu de compartilhar. No Windows, instale o <strong>Google Drive para computador</strong>: a pasta aparece como uma letra de unidade e o <code>ocluir</code> lê direto dela, sem download manual.</p>
+  <p>O <code>.apkg</code> carrega as notas <em>e</em> as imagens dentro dele. Você toca no arquivo no Android e o AnkiDroid importa: nenhum computador, nenhum servidor, nenhuma conta. É esse caminho que torna o fluxo pelo chat possível.</p>
+
+  <p>O que continua valendo da leitura anterior: <strong>não compensa construir app Android.</strong> O AnkiDroid já tem editor de oclusão nativo, e desenhar retângulo com o dedo numa tela grande é mais confortável que com mouse. O que falta no tablet nunca foi a interface de desenhar — é o resto: medir os rótulos, acertar deck e tags, checar duplicata, ligar à pergunta lógica, respeitar o teto de quantidade.</p>
+
+  <h3>Se você quiser o Caminho A mesmo assim</h3>
+  <p>Ele tem uma vantagem real: o Tesseract mede em pixel exato, e a precisão é maior. Nesse caso a ponte é a pasta do Drive que você já usa — crie <code>Aulas/Capturas/</code>, mande o print para lá pelo menu de compartilhar do Android, e no Windows instale o <strong>Google Drive para computador</strong>, que faz a pasta aparecer como uma letra de unidade para o <code>ocluir</code> ler direto.</p>
 
   <p>Dois detalhes de captura que mudam bastante o resultado do OCR:</p>
   <ul>
@@ -637,12 +652,18 @@
 
   <ol>
     <li>Você manda a transcrição da aula. Saem as perguntas lógicas, como já sai hoje.</li>
-    <li>Você manda o print do diagrama. Eu leio a imagem e a lista de candidatos do OCR junto — a imagem me diz o que é o quê, a lista me dá as coordenadas exatas.</li>
+    <li>Você manda o print do diagrama. Eu meço as caixas de texto e olho a imagem com elas numeradas — a medição me dá as coordenadas exatas, a leitura me diz que a caixa 3 é a hexoquinase.</li>
     <li>Você fala: <em>"as âncoras aqui são telencéfalo, diencéfalo, mesencéfalo, ponte e bulbo"</em>. Eu escrevo os grupos.</li>
-    <li>Você olha a prévia. Se a máscara estiver certa, dois comandos e a nota existe.</li>
+    <li>Você olha a prévia. Se a máscara estiver certa, sai o <code>.apkg</code> e você toca nele no tablet.</li>
   </ol>
 
   <p>O passo 3 é o único que é seu, e é o único que deve ser. Os outros três são digitação.</p>
+
+  <div class="block callout">
+    <span class="callout-label">Por que o passo 2 funciona, sendo que eu erro coordenadas</span>
+    <p>Eu não estimo posição a olho — isso produziria máscara torta. A medição é feita por análise de imagem: as faixas de texto saem por projeção de perfil, depois de apagar os traços longos, que é o que impede a borda de um retângulo e as setas de virarem rótulo. Isso dá a caixa em pixel.</p>
+    <p>O que eu faço é a outra metade, que nenhuma medição resolve: <em>ler</em>. Olho a imagem numerada e digo qual número corresponde a qual nome. A precisão vem da máquina, o significado vem da leitura, e nenhum dos dois tenta fazer o trabalho do outro.</p>
+  </div>
 </section>
 
 <section>
