@@ -1,0 +1,763 @@
+<title>Oclusão de imagem no método — análise</title>
+<style>
+  :root {
+    --ground: #f6f7f9;
+    --surface: #ffffff;
+    --surface-2: #eef0f4;
+    --ink: #161922;
+    --ink-2: #444c5d;
+    --ink-3: #6f7788;
+    --rule: #dce0e7;
+    --rule-strong: #c3c9d4;
+    --mask: #ffca00;
+    --mask-ink: #2a2100;
+    --accent: #a97800;
+    --accent-soft: #fdf3d6;
+    --alert: #b23a2c;
+    --alert-soft: #fbeceb;
+    --serif: Iowan Old Style, Palatino, "Palatino Linotype", Georgia, serif;
+    --sans: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #101319;
+      --surface: #171b23;
+      --surface-2: #1e232d;
+      --ink: #e7eaf0;
+      --ink-2: #b6bdca;
+      --ink-3: #8b93a3;
+      --rule: #2a303b;
+      --rule-strong: #3b4351;
+      --mask: #ffca00;
+      --mask-ink: #2a2100;
+      --accent: #f2c14a;
+      --accent-soft: #2a2312;
+      --alert: #ef8073;
+      --alert-soft: #2c1a18;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #101319;
+    --surface: #171b23;
+    --surface-2: #1e232d;
+    --ink: #e7eaf0;
+    --ink-2: #b6bdca;
+    --ink-3: #8b93a3;
+    --rule: #2a303b;
+    --rule-strong: #3b4351;
+    --mask: #ffca00;
+    --mask-ink: #2a2100;
+    --accent: #f2c14a;
+    --accent-soft: #2a2312;
+    --alert: #ef8073;
+    --alert-soft: #2c1a18;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17.5px;
+    line-height: 1.65;
+    margin: 0;
+    padding: 0 20px 100px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 780px; margin: 0 auto; }
+
+  /* ---------- cabeçalho ---------- */
+
+  header {
+    padding: 72px 0 40px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 650;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 18px;
+  }
+
+  h1 {
+    font-family: var(--sans);
+    font-size: clamp(32px, 6vw, 46px);
+    font-weight: 720;
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+    text-wrap: balance;
+    margin: 0 0 20px;
+  }
+
+  .standfirst {
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    margin: 0;
+    max-width: 34em;
+  }
+
+  /* ---------- seções ---------- */
+
+  section { padding: 44px 0; border-bottom: 1px solid var(--rule); }
+  section:last-of-type { border-bottom: none; }
+
+  .sec-head {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 16px;
+    align-items: baseline;
+    margin-bottom: 22px;
+  }
+
+  .sec-num {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    padding-top: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  h2 {
+    font-family: var(--sans);
+    font-size: clamp(22px, 3.6vw, 28px);
+    font-weight: 680;
+    letter-spacing: -0.018em;
+    line-height: 1.18;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  h3 {
+    font-family: var(--sans);
+    font-size: 17px;
+    font-weight: 660;
+    letter-spacing: -0.005em;
+    margin: 32px 0 10px;
+  }
+
+  p { margin: 0 0 16px; }
+  section > p, section > ul, section > ol, section > .block { margin-left: 60px; }
+  @media (max-width: 620px) {
+    .sec-head { grid-template-columns: 1fr; gap: 4px; }
+    .sec-num { padding-top: 0; }
+    section > p, section > ul, section > ol, section > .block { margin-left: 0; }
+  }
+
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 9px; }
+
+  strong { font-weight: 600; color: var(--ink); }
+  em { font-style: italic; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.85em;
+    background: var(--surface-2);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  /* ---------- blocos ---------- */
+
+  .block { margin-bottom: 18px; }
+
+  .callout {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    padding: 20px 22px;
+    border-radius: 2px;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+
+  .callout.regra { border-left-color: var(--mask); background: var(--accent-soft); }
+  .callout.risco { border-left-color: var(--alert); background: var(--alert-soft); }
+
+  .callout-label {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 680;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    display: block;
+    margin-bottom: 10px;
+  }
+  .callout.risco .callout-label { color: var(--alert); }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 0 0 18px;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+
+  .tabela-envolucro { overflow-x: auto; margin: 0 0 20px; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: var(--sans);
+    font-size: 14.5px;
+    min-width: 460px;
+  }
+  th {
+    text-align: left;
+    font-weight: 640;
+    font-size: 11.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding: 0 14px 9px 0;
+    border-bottom: 1.5px solid var(--rule-strong);
+    vertical-align: bottom;
+  }
+  td {
+    padding: 12px 14px 12px 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    color: var(--ink-2);
+  }
+  td:first-child { color: var(--ink); font-weight: 550; }
+
+  /* ---------- demo ---------- */
+
+  .demo {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 22px;
+    margin: 0 0 20px;
+  }
+
+  .demo-barra {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 20px;
+    font-family: var(--sans);
+  }
+
+  button {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 570;
+    color: var(--ink-2);
+    background: var(--surface-2);
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+    padding: 7px 13px;
+    cursor: pointer;
+  }
+  button:hover { color: var(--ink); border-color: var(--ink-3); }
+  button[aria-pressed="true"] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--ground);
+  }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .arvore { display: flex; flex-direction: column; gap: 14px; align-items: center; }
+  .nivel { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+  .no {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 550;
+    padding: 9px 14px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+    background: var(--surface-2);
+    color: var(--ink);
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .no.alvo { cursor: pointer; border-style: solid; }
+  .no.alvo .texto { transition: opacity 0.12s; }
+
+  .no.mascarado { background: var(--mask); border-color: var(--mask); color: var(--mask-ink); }
+  .no.mascarado .texto { opacity: 0; }
+  .no.ativo { box-shadow: 0 0 0 2px var(--ink); }
+
+  .demo-nota {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink-3);
+    margin: 18px 0 0;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* ---------- fluxo ---------- */
+
+  .fluxo { width: 100%; height: auto; margin: 0 0 8px; }
+  .fluxo text { font-family: var(--sans); }
+  .fluxo .cx { fill: var(--surface); stroke: var(--rule-strong); }
+  .fluxo .cx-forte { fill: var(--accent-soft); stroke: var(--accent); }
+  .fluxo .rot { fill: var(--ink); font-size: 12px; font-weight: 600; }
+  .fluxo .sub { fill: var(--ink-3); font-size: 10.5px; }
+  .fluxo .seta { stroke: var(--rule-strong); fill: none; }
+  .fluxo .cabeca { fill: var(--rule-strong); }
+  .fluxo .faixa { fill: var(--ink-3); font-size: 10px; font-weight: 650; letter-spacing: 0.1em; }
+
+  .legenda {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink-3);
+    margin: 0 0 20px;
+    line-height: 1.5;
+  }
+
+  footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 2px solid var(--ink);
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--ink-3);
+    line-height: 1.6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Método de estudos · agosto de 2026</p>
+  <h1>Oclusão de imagem: onde ela entra no seu método, e onde ela não entra</h1>
+  <p class="standfirst">Uma análise do que os cartões de imagem resolvem de verdade, qual parte disso dá para automatizar, e por que a parte que não dá é justamente a que você não quer terceirizar.</p>
+</header>
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>A pergunta antes da ferramenta</h2></div>
+
+  <p>Seu método tem uma divisão de trabalho que já está escrita e que funciona: a <strong>pergunta lógica</strong> guarda o mecanismo, o <strong>Anki</strong> guarda 2 a 4 âncoras mínimas, e nada aparece nos dois lugares. O teste de auditoria é o que separa: <em>se eu esquecesse tudo, quais poucas peças preciso lembrar para responder isso sozinho?</em></p>
+
+  <p>A pergunta certa não é "dá para automatizar cartão de oclusão". Dá — e eu construí a ferramenta, está descrita na seção 08. A pergunta certa é se a oclusão de imagem <strong>cabe</strong> nessa divisão de trabalho ou se ela a corrói.</p>
+
+  <p>A resposta curta é que ela cabe, mas só sob uma regra que ainda não existia no seu método, porque o método foi desenhado para cartões de texto e essa regra não fazia falta. É a seção 02.</p>
+
+  <div class="block callout risco">
+    <span class="callout-label">O risco, dito antes de qualquer entusiasmo</span>
+    <p>Seu próprio vault registra, em 02/08, que você <em>valoriza rótulos mais que entendimento de mecanismos</em>. E o documento do pipeline de cartões abre avisando: uma IA que lê material e cospe cartões produz "dezenas de cartões de rótulo, cada um tecnicamente correto, coletivamente inúteis".</p>
+    <p>Oclusão de imagem é a tecnologia mais eficiente já inventada para produzir cartões de rótulo. Uma prancha do Netter com 30 legendas vira 30 cartões em dois cliques. Nada disso é argumento contra usá-la — é argumento a favor de usá-la com um teto e uma regra de entrada, que é exatamente o que está abaixo.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>A regra de admissão</h2></div>
+
+  <p>Você chegou perto dela sozinho quando disse que, na imagem, "bastaria identificar o nome da parte anatômica que estivesse naquela localidade, sendo apontado pela seta" — enquanto uma sentença "exige a interpretação da sentença e saber o que deve ser respondido a partir dela".</p>
+
+  <p>Isso está certo, mas o motivo é mais estreito do que parece, e o motivo é a regra:</p>
+
+  <div class="block callout regra">
+    <span class="callout-label">Regra de admissão</span>
+    <p>Um cartão de oclusão se justifica quando <strong>a posição é a pergunta</strong>. Ou seja: quando descrever em palavras <em>onde</em> aquilo está custaria mais texto do que a própria resposta.</p>
+  </div>
+
+  <p>O teste prático é escrever o mesmo cartão como texto e olhar o tamanho da frente:</p>
+
+  <div class="tabela-envolucro">
+    <table>
+      <thead><tr><th>Frente em texto</th><th>Veredito</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>"Qual enzima converte glicose em glicose-6-fosfato?"</td>
+          <td>Frente curta e inequívoca. A imagem não acrescenta nada. <strong>Cartão Basic.</strong></td>
+        </tr>
+        <tr>
+          <td>"Qual estrutura fica na face posterior do tronco, entre o mesencéfalo acima e o bulbo abaixo, formando a parede anterior do quarto ventrículo?"</td>
+          <td>A frente virou um parágrafo, e o parágrafo está fazendo o trabalho que a figura faz sozinha. <strong>Oclusão.</strong></td>
+        </tr>
+        <tr>
+          <td>"Qual enzima age <em>neste ponto</em> da via, entre frutose-6-fosfato e frutose-1,6-bisfosfato?"</td>
+          <td>Caso de fronteira. Cabe em texto, mas a posição na cadeia é o que você quer treinar, e o diagrama entrega a cadeia inteira de graça. <strong>Oclusão.</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Repare no que a regra <em>rejeita</em>: ela rejeita usar oclusão só porque a imagem existe. Se o slide tem uma imagem e o conteúdo dela cabe numa frente curta, a imagem é ilustração, não estrutura da pergunta. Esse é o filtro que impede a prancha de 30 legendas.</p>
+
+  <h3>O segundo teste, que é o do seu método e continua valendo</h3>
+  <p>Depois da regra de admissão, o cartão de oclusão passa pelo mesmo teste que qualquer outro: <em>se eu apagar este cartão, a pergunta lógica ainda pode ser respondida?</em> Se a resposta for sim, o cartão não é âncora — é enfeite. A oclusão não tem passe livre.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>Os dois modos, e quando usar cada um</h2></div>
+
+  <p>O Anki nativo tem dois modos, e a escolha entre eles muda o que está sendo treinado. Isso quase nunca é explicado, e é a decisão mais consequente do cartão.</p>
+
+  <div class="demo">
+    <div class="demo-barra">
+      <button id="btn-tudo" aria-pressed="true">Esconder tudo</button>
+      <button id="btn-uma" aria-pressed="false">Esconder uma</button>
+      <button id="btn-prox" style="margin-left:auto">Próximo cartão →</button>
+    </div>
+    <div class="arvore" id="arvore">
+      <div class="nivel"><span class="no">Encéfalo</span></div>
+      <div class="nivel"><span class="no">Cérebro</span><span class="no">Tronco encefálico</span></div>
+      <div class="nivel" id="alvos"></div>
+    </div>
+    <p class="demo-nota" id="demo-nota"></p>
+  </div>
+
+  <p class="legenda">Toque numa máscara para revelar. Alterne os modos e repare no que sobra de pista.</p>
+
+  <p>Em <strong>esconder tudo</strong>, os rótulos vizinhos somem junto. Você precisa saber a estrutura a partir da forma e da posição, não da eliminação. Em <strong>esconder uma</strong>, os vizinhos ficam à vista e passam a ser a pista legítima.</p>
+
+  <p>A escolha não é de gosto — depende de <em>o que é a pista que você quer treinar</em>:</p>
+
+  <div class="tabela-envolucro">
+    <table>
+      <thead><tr><th>Tipo de imagem</th><th>Modo</th><th>Por quê</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Via metabólica, cascata, sequência</td>
+          <td><strong>Esconder uma</strong></td>
+          <td>O que você quer saber é qual enzima age <em>naquele ponto</em>. O ponto é definido pelo que vem antes e depois — se os vizinhos sumirem, a pergunta perde o sentido.</td>
+        </tr>
+        <tr>
+          <td>Classificação, hierarquia, divisão</td>
+          <td><strong>Esconder tudo</strong></td>
+          <td>Os irmãos entregam a resposta por eliminação. Com cinco caixas e quatro rótulos visíveis, a quinta se responde sem saber nada.</td>
+        </tr>
+        <tr>
+          <td>Prancha anatômica, corte, topografia</td>
+          <td><strong>Esconder tudo</strong></td>
+          <td>Na prova a peça não vem legendada. Um cartão que deixa metade dos nomes à vista treina uma tarefa que não existe.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>O limite honesto: o que a oclusão não treina</h2></div>
+
+  <p>Um cartão de oclusão sempre mostra a posição e pede o nome. Ele treina <strong>reconhecimento → nome</strong>, numa direção só.</p>
+
+  <p>Ele não treina <strong>nome → posição</strong>. Depois de vinte cartões de oclusão do encéfalo você reconhece a ponte quando a vê apontada, e pode continuar sem conseguir dizer, de olhos fechados, onde a ponte fica em relação ao bulbo. Não é falha de execução — é o que o formato faz.</p>
+
+  <p>Isso importa em anatomia porque a prova cobra as duas direções, e a prova prática cobra uma terceira: a peça real, sem seta, sem legenda, em orientação diferente da figura. Três consequências práticas:</p>
+
+  <ul>
+    <li><strong>Oclusão não substitui a peça.</strong> Seu próprio documento de aula presencial já diz que relação espacial é o conhecimento que menos sobrevive à transcrição, e que anatomia é a disciplina de menor retorno para faltar. A oclusão reforça isso, não contorna.</li>
+    <li><strong>A direção inversa mora na pergunta lógica, não em outro cartão.</strong> Não crie um cartão espelho "onde fica a ponte" — isso duplica e compete. A reconstrução espacial é exatamente o tipo de coisa que a pergunta lógica faz bem.</li>
+    <li><strong>Varie a figura.</strong> Dois cartões da mesma estrutura em duas figuras diferentes valem mais que dois na mesma, porque o que você não quer é decorar aquela imagem.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><h2>O teto de quantidade, e o corte por regiões</h2></div>
+
+  <p>Seu método diz 2 a 4 âncoras por pergunta lógica. Uma via glicolítica completa tem dez enzimas. Os dois números não se contradizem — eles apontam para uma decisão que precisa ser tomada explicitamente: <strong>uma imagem grande não é uma pergunta, são várias.</strong></p>
+
+  <p>O corte certo não é diminuir os cartões até caber em quatro. É dividir a <em>imagem</em> em regiões, e cada região responde a uma pergunta lógica diferente:</p>
+
+  <ul>
+    <li>Glicólise inteira → duas imagens: fase preparatória (consome ATP) e fase de pagamento (rende ATP). São dois mecanismos com lógicas opostas, e a divisão é conceitual, não estética.</li>
+    <li>Prancha de crânio inteiro → uma imagem por norma (frontal, lateral, base). Cada uma tem uma pergunta lógica própria.</li>
+  </ul>
+
+  <p>A ferramenta reforça isso: mais de 6 máscaras numa imagem dispara um aviso, mais de 12 bloqueia. O bloqueio tem um <code>--forcar</code>, e ele existe para a decisão consciente, não para a pressa.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><h2>O que dá e o que não dá para automatizar</h2></div>
+
+  <p>O seu documento de pipeline já resolveu essa questão para cartões de texto, e a resposta se transfere inteira. A linha divisória continua no mesmo lugar:</p>
+
+  <div class="tabela-envolucro">
+    <table>
+      <thead><tr><th>Etapa</th><th>Quem faz</th><th>Por quê</th></tr></thead>
+      <tbody>
+        <tr><td>Achar os rótulos e suas coordenadas</td><td>OCR</td><td>trabalho de medição, com precisão de pixel</td></tr>
+        <tr><td>Decidir quais rótulos são âncoras</td><td><strong>você</strong></td><td>é o teste de auditoria — o núcleo do método</td></tr>
+        <tr><td>Escolher o modo e o agrupamento</td><td><strong>você</strong>, com a regra da seção 03</td><td>define o que está sendo treinado</td></tr>
+        <tr><td>Redigir cabeçalho, montar máscaras</td><td>Claude</td><td>redação e formato, com regras claras</td></tr>
+        <tr><td>Deck, tags, checagem de duplicata</td><td>Claude</td><td>burocracia que você não faz de cabeça</td></tr>
+        <tr><td>Inserir no Anki</td><td>Claude via AnkiConnect</td><td>digitar é seu gargalo declarado</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="block callout">
+    <span class="callout-label">A tentação específica deste projeto</span>
+    <p>É pedir que eu olhe o slide e devolva os cartões prontos. Eu consigo fazer isso e o resultado seria plausível — e seria o baralho de rótulos. A decisão de que <em>a ponte merece um cartão e o quarto ventrículo não</em> depende do que a sua pergunta lógica daquela aula precisa, e isso está na sua cabeça, não no slide.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">07</span><h2>A arquitetura: por que OCR e não visão</h2></div>
+
+  <p>Este é o ponto técnico que decidiu o desenho inteiro, e vale explicar porque é contraintuitivo.</p>
+
+  <p>Eu enxergo a imagem. Consigo dizer o que é um fluxograma, onde está a hierarquia, qual rótulo é enzima e qual é metabólito. O que eu <strong>não</strong> faço bem é dizer que a palavra "mesencéfalo" ocupa os pixels de 748 a 913 na horizontal. Modelos de visão estimam coordenadas, e estimativa de coordenada vira máscara torta — cobrindo meio rótulo, ou cobrindo o rótulo do lado.</p>
+
+  <p>O Tesseract é o inverso exato: não faz ideia do que é uma enzima, e devolve a caixa de cada palavra em pixel exato. Então:</p>
+
+  <svg class="fluxo" viewBox="0 0 700 250" role="img" aria-label="Fluxo: OCR fornece geometria, julgamento escolhe, ferramenta executa">
+    <defs>
+      <marker id="p" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+        <path d="M0,0 L7,3 L0,6 z" class="cabeca"/>
+      </marker>
+    </defs>
+
+    <text x="10" y="20" class="faixa">MEDIÇÃO</text>
+    <rect x="10" y="30" width="150" height="54" rx="3" class="cx"/>
+    <text x="26" y="52" class="rot">Tesseract</text>
+    <text x="26" y="70" class="sub">caixa exata de cada palavra</text>
+
+    <line x1="168" y1="57" x2="212" y2="57" class="seta" marker-end="url(#p)"/>
+
+    <text x="220" y="20" class="faixa">JULGAMENTO</text>
+    <rect x="220" y="30" width="170" height="54" rx="3" class="cx-forte"/>
+    <text x="236" y="52" class="rot">Você (por voz)</text>
+    <text x="236" y="70" class="sub">quais viram âncora</text>
+
+    <line x1="398" y1="57" x2="442" y2="57" class="seta" marker-end="url(#p)"/>
+
+    <text x="450" y="20" class="faixa">EXECUÇÃO</text>
+    <rect x="450" y="30" width="160" height="54" rx="3" class="cx"/>
+    <text x="466" y="52" class="rot">ocluir</text>
+    <text x="466" y="70" class="sub">monta e insere a nota</text>
+
+    <line x1="305" y1="92" x2="305" y2="128" class="seta" marker-end="url(#p)"/>
+
+    <rect x="180" y="136" width="250" height="48" rx="3" class="cx"/>
+    <text x="196" y="157" class="rot">Prévia visual</text>
+    <text x="196" y="174" class="sub">conferir antes de inserir</text>
+
+    <line x1="436" y1="160" x2="530" y2="160" class="seta" marker-end="url(#p)"/>
+    <line x1="530" y1="160" x2="530" y2="92" class="seta"/>
+
+    <text x="180" y="212" class="sub">A máscara torta é invisível no JSON e óbvia na imagem — por isso a prévia</text>
+    <text x="180" y="230" class="sub">não é opcional no fluxo.</text>
+  </svg>
+
+  <h3>Dois achados medidos durante a construção</h3>
+
+  <p>Não são detalhes de implementação — os dois mudaram o desenho, e valem porque explicam por que a ferramenta faz o que faz:</p>
+
+  <ul>
+    <li><strong>Uma passagem de OCR tem recall instável.</strong> No diagrama de teste, a mesma imagem em escalas diferentes achava conjuntos <em>diferentes</em> de rótulos: 10 de 12 numa escala, 12 de 12 na união de quatro passagens. A ferramenta roda quatro e funde os resultados por sobreposição espacial.</li>
+    <li><strong>Agrupar palavras pela "linha" do Tesseract funde rótulos distantes.</strong> "Mesencéfalo" e "Bulbo", na mesma altura mas a 400 px de distância, viravam uma linha só — e a máscara cobriria os dois <em>e o espaço entre eles</em>. O agrupamento passou a ser geométrico: mesma faixa horizontal, e vão proporcional à altura do texto.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">08</span><h2>O que já está pronto</h2></div>
+
+  <p>Está no repositório <code>tablet-</code>, na branch <code>claude/image-occlusion-cards-study-6qa2e4</code>. Chama-se <code>ocluir</code>, roda no Windows 10, e tem 84 testes passando — incluindo um AnkiConnect falso que confere o corpo exato das requisições, com a interface do Anki em inglês e em português.</p>
+
+  <pre><code>python -m ocluir ler slide.png --titulo "Divisões do encéfalo" \
+    --pergunta divisoes-encefalo --disciplina anatomia --aula 2026-08-10
+
+  1. Divisoes do encefalo      conf 92.4   x=0.04 y=0.05
+  3. Cerebro                   conf 96.2   x=0.24 y=0.36
+  4. Tronco encefalico         conf 93.2   x=0.65 y=0.36
+  6. Telencefalo               conf 92.3   x=0.10 y=0.57
+  ...</code></pre>
+
+  <p>O arquivo que ele gera nasce <strong>sem cartão nenhum</strong>, de propósito. O que você (ou eu, ouvindo você) preenche é isto:</p>
+
+  <pre><code>"grupos": [
+  { "rotulo": "Telencéfalo", "tokens": [6] },
+  { "rotulo": "Diencéfalo",  "tokens": [5] },
+  { "rotulo": "Mesencéfalo", "tokens": [7] }
+]</code></pre>
+
+  <p>Depois <code>ocluir previa</code> desenha as máscaras para você conferir, e <code>ocluir enviar</code> cria a nota com deck e tags no esquema que você já decidiu — <code>pergunta::</code>, <code>disc::</code>, <code>aula::</code>.</p>
+
+  <h3>Três detalhes que resolvem os casos difíceis</h3>
+  <ul>
+    <li><strong>Rótulo que o OCR não lê</strong> — texto embutido na figura, seta sem legenda, região sem nome nenhum: dá para pôr a caixa à mão, em frações da imagem.</li>
+    <li><strong>Vários rótulos no mesmo cartão</strong> — a enzima e o cofator do mesmo passo aparecem e somem juntos. É o agrupamento por ordinal da cloze.</li>
+    <li><strong>PDF do professor</strong> — <code>ocluir pdf aula.pdf --paginas 12-18</code> extrai as páginas em resolução boa para OCR, sem print nenhum.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">09</span><h2>Os dois aparelhos: o Android captura, o Windows produz</h2></div>
+
+  <p>Vale dizer o que <em>não</em> compensa construir. O AnkiDroid já tem editor de oclusão nativo, e ele é bom — desenhar retângulo com o dedo numa tela grande é mais confortável que com mouse. Construir um app Android para desenhar máscaras seria refazer, pior, algo que já existe e é gratuito.</p>
+
+  <p>O que falta no tablet não é a interface de desenhar. É tudo em volta: OCR preciso, deck e tags certos, checagem de duplicata, vínculo com a pergunta lógica, e o teto de quantidade. Isso é trabalho de teclado e de arquivo, e mora no Windows.</p>
+
+  <div class="tabela-envolucro">
+    <table>
+      <thead><tr><th></th><th>Android (tablet)</th><th>Windows 10</th></tr></thead>
+      <tbody>
+        <tr><td>Papel</td><td>capturar e revisar</td><td>produzir</td></tr>
+        <tr><td>Como</td><td>print da aula, recortado na hora</td><td><code>ocluir</code> + AnkiConnect</td></tr>
+        <tr><td>Anki</td><td>AnkiDroid, revisão e ajuste fino</td><td>Anki desktop, criação</td></tr>
+        <tr><td>Ponte</td><td colspan="2">a pasta do Google Drive que você já usa para o vault</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>A ponte, concretamente</h3>
+  <p>Você já mantém o vault no Drive, então não há infraestrutura nova a inventar. Crie <code>Aulas/Capturas/</code> no Drive. No tablet, o print vai para lá pelo menu de compartilhar. No Windows, instale o <strong>Google Drive para computador</strong>: a pasta aparece como uma letra de unidade e o <code>ocluir</code> lê direto dela, sem download manual.</p>
+
+  <p>Dois detalhes de captura que mudam bastante o resultado do OCR:</p>
+  <ul>
+    <li><strong>Recorte o print no próprio Android</strong>, ainda no editor que abre depois do screenshot. Tirar a barra do player e o resto da interface elimina a maior fonte de tokens-lixo.</li>
+    <li><strong>Prefira o PDF do professor quando existir.</strong> Print de vídeo é imagem comprimida de texto pequeno; a página do PDF é o mesmo diagrama em resolução total. Quando o material existe, o <code>ocluir pdf</code> pula a captura inteira.</li>
+  </ul>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">10</span><h2>Como isso encaixa no fluxo por voz</h2></div>
+
+  <p>Seu gargalo declarado é digitar, e o formato do plano foi desenhado em volta disso. O JSON existe para <em>eu</em> escrever, não você. Na prática o ciclo é:</p>
+
+  <ol>
+    <li>Você manda a transcrição da aula. Saem as perguntas lógicas, como já sai hoje.</li>
+    <li>Você manda o print do diagrama. Eu leio a imagem e a lista de candidatos do OCR junto — a imagem me diz o que é o quê, a lista me dá as coordenadas exatas.</li>
+    <li>Você fala: <em>"as âncoras aqui são telencéfalo, diencéfalo, mesencéfalo, ponte e bulbo"</em>. Eu escrevo os grupos.</li>
+    <li>Você olha a prévia. Se a máscara estiver certa, dois comandos e a nota existe.</li>
+  </ol>
+
+  <p>O passo 3 é o único que é seu, e é o único que deve ser. Os outros três são digitação.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">11</span><h2>Quando começar — e uma ressalva</h2></div>
+
+  <p>A ressalva primeiro, porque ela é sua e está escrita no seu vault.</p>
+
+  <div class="block callout risco">
+    <span class="callout-label">O padrão, acontecendo</span>
+    <p>Em 03/08 você registrou que <em>a geração de projetos novos acelera conforme o prazo do teste se aproxima</em>. Anatomia começa em <strong>10/08</strong>. Hoje é 08/08, e apareceu um projeto novo.</p>
+    <p>A diferença — e ela é real, não consolo — é que isto <strong>não é um nono projeto</strong>. É uma extensão do projeto 2, <em>Automação de cartões</em>, que já está desenhado e já tem lugar no seu cronograma: <strong>semana 3</strong>. O que faz dele um caso do padrão não é a ideia, é a data.</p>
+  </div>
+
+  <p>A recomendação segue o seu próprio documento de ordenação, não a minha opinião sobre o que seria legal fazer:</p>
+
+  <div class="tabela-envolucro">
+    <table>
+      <thead><tr><th>Quando</th><th>O quê</th><th>Custo</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Antes de 10/08</strong></td>
+          <td>Instalar Tesseract e AnkiConnect. Conferir se o Anki é 23.10 ou mais novo. Criar a pasta do Drive.</td>
+          <td>~15 min. O AnkiConnect já estava na sua lista.</td>
+        </tr>
+        <tr>
+          <td><strong>Semanas 1 e 2</strong></td>
+          <td>Nada. Só o protocolo dos três símbolos em aula, como já estava decidido. Se aparecer um diagrama que pede oclusão, tire o print e guarde — capturar é barato.</td>
+          <td>zero</td>
+        </tr>
+        <tr>
+          <td><strong>Semana 3</strong></td>
+          <td>Primeira nota de oclusão, junto com o pipeline de cartões entrando em operação. Uma imagem, não dez.</td>
+          <td>já estava no cronograma</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>O motivo de esperar não é disciplina pela disciplina. É que um cartão de oclusão sem a pergunta lógica que o justifica é exatamente o cartão de rótulo solto que o método existe para não produzir — e nas duas primeiras semanas não vai haver pergunta lógica de anatomia rodada para ancorar nada. A ferramenta estar pronta antes do uso é bom; usá-la antes de ter no que ancorar é o padrão vencendo.</p>
+
+  <div class="block callout">
+    <span class="callout-label">Critério de fracasso, para não ficar em aberto</span>
+    <p>Se em quatro semanas de uso os cartões de oclusão não estiverem, na maioria, ligados a uma pergunta lógica pela tag <code>pergunta::</code>, o experimento falhou — não por a ferramenta não funcionar, mas por ter virado baralho de rótulos. O sinal é verificável com uma busca no Anki: <code>tag:oclusao -tag:pergunta::*</code>.</p>
+  </div>
+</section>
+
+<footer>
+  <p>Ferramenta e código em <code>tablet-</code>, branch <code>claude/image-occlusion-cards-study-6qa2e4</code>. Formato do campo de oclusão confirmado contra o código-fonte do Anki, em <code>ts/routes/image-occlusion/shapes/</code>.</p>
+</footer>
+
+</div>
+
+<script>
+  (function () {
+    var ALVOS = ["Telencéfalo", "Diencéfalo", "Mesencéfalo", "Ponte", "Bulbo"];
+    var modo = "tudo";
+    var ativo = 0;
+    var revelado = false;
+
+    var caixa = document.getElementById("alvos");
+    var nota = document.getElementById("demo-nota");
+    var btnTudo = document.getElementById("btn-tudo");
+    var btnUma = document.getElementById("btn-uma");
+    var btnProx = document.getElementById("btn-prox");
+
+    ALVOS.forEach(function (rotulo, i) {
+      var no = document.createElement("button");
+      no.className = "no alvo";
+      no.type = "button";
+      no.innerHTML = '<span class="texto">' + rotulo + "</span>";
+      no.addEventListener("click", function () {
+        ativo = i;
+        revelado = true;
+        desenhar();
+      });
+      caixa.appendChild(no);
+    });
+
+    function desenhar() {
+      var nos = caixa.querySelectorAll(".no");
+      for (var i = 0; i < nos.length; i++) {
+        var mascarar = modo === "tudo" ? !(revelado && i === ativo) : i === ativo && !revelado;
+        nos[i].classList.toggle("mascarado", mascarar);
+        nos[i].classList.toggle("ativo", i === ativo);
+        nos[i].setAttribute(
+          "aria-label",
+          ALVOS[i] + (mascarar ? " — oculto" : " — visível")
+        );
+      }
+
+      btnTudo.setAttribute("aria-pressed", String(modo === "tudo"));
+      btnUma.setAttribute("aria-pressed", String(modo === "uma"));
+
+      nota.textContent =
+        modo === "tudo"
+          ? "Cartão " + (ativo + 1) + " de 5. Nenhum vizinho ajuda — a resposta vem da posição na árvore."
+          : "Cartão " + (ativo + 1) + " de 5. Os vizinhos estão à vista e estreitam a resposta.";
+    }
+
+    btnTudo.addEventListener("click", function () {
+      modo = "tudo";
+      revelado = false;
+      desenhar();
+    });
+    btnUma.addEventListener("click", function () {
+      modo = "uma";
+      revelado = false;
+      desenhar();
+    });
+    btnProx.addEventListener("click", function () {
+      ativo = (ativo + 1) % ALVOS.length;
+      revelado = false;
+      desenhar();
+    });
+
+    desenhar();
+  })();
+</script>
