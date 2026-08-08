@@ -1,0 +1,240 @@
+{
+  "imagem": "glicolise.png",
+  "titulo": "Glicólise — fase preparatória",
+  "deck": "Medicina::Bioquímica",
+  "modo": "esconder-uma",
+  "pergunta": "glicolise-fase-preparatoria",
+  "disciplina": "bioquimica",
+  "aula": "",
+  "verso_extra": "",
+  "comentarios": "",
+  "folga": 0.06,
+  "grupos": [
+    {
+      "rotulo": "Hexoquinase",
+      "tokens": [
+        4
+      ],
+      "caixa": null,
+      "nota": ""
+    },
+    {
+      "rotulo": "Fosfoglicose isomerase",
+      "tokens": [
+        6
+      ],
+      "caixa": null,
+      "nota": ""
+    },
+    {
+      "rotulo": "Fosfofrutoquinase-1",
+      "tokens": [
+        8
+      ],
+      "caixa": null,
+      "nota": ""
+    },
+    {
+      "rotulo": "Aldolase",
+      "tokens": [
+        10
+      ],
+      "caixa": null,
+      "nota": ""
+    }
+  ],
+  "candidatos": [
+    {
+      "id": 1,
+      "texto": "Glicolise",
+      "confianca": 92.6,
+      "caixa_px": [
+        51,
+        41,
+        130,
+        24
+      ],
+      "posicao": {
+        "esquerda": 0.057,
+        "topo": 0.033,
+        "largura": 0.144,
+        "altura": 0.019
+      }
+    },
+    {
+      "id": 2,
+      "texto": "fase preparatoria",
+      "confianca": 93.0,
+      "caixa_px": [
+        217,
+        41,
+        274,
+        32
+      ],
+      "posicao": {
+        "esquerda": 0.241,
+        "topo": 0.033,
+        "largura": 0.304,
+        "altura": 0.026
+      }
+    },
+    {
+      "id": 3,
+      "texto": "Glicose",
+      "confianca": 96.5,
+      "caixa_px": [
+        261,
+        133,
+        77,
+        17
+      ],
+      "posicao": {
+        "esquerda": 0.29,
+        "topo": 0.106,
+        "largura": 0.086,
+        "altura": 0.014
+      }
+    },
+    {
+      "id": 4,
+      "texto": "Hexoquinase",
+      "confianca": 91.8,
+      "caixa_px": [
+        352,
+        225,
+        126,
+        19
+      ],
+      "posicao": {
+        "esquerda": 0.391,
+        "topo": 0.18,
+        "largura": 0.14,
+        "altura": 0.015
+      }
+    },
+    {
+      "id": 5,
+      "texto": "Glicose-6-fosfato",
+      "confianca": 92.2,
+      "caixa_px": [
+        208,
+        363,
+        183,
+        17
+      ],
+      "posicao": {
+        "esquerda": 0.231,
+        "topo": 0.29,
+        "largura": 0.203,
+        "altura": 0.014
+      }
+    },
+    {
+      "id": 6,
+      "texto": "Fosfoglicose isomerase",
+      "confianca": 92.0,
+      "caixa_px": [
+        352,
+        455,
+        230,
+        19
+      ],
+      "posicao": {
+        "esquerda": 0.391,
+        "topo": 0.364,
+        "largura": 0.256,
+        "altura": 0.015
+      }
+    },
+    {
+      "id": 7,
+      "texto": "Frutose-6-fosfato",
+      "confianca": 91.3,
+      "caixa_px": [
+        209,
+        593,
+        184,
+        17
+      ],
+      "posicao": {
+        "esquerda": 0.232,
+        "topo": 0.474,
+        "largura": 0.204,
+        "altura": 0.014
+      }
+    },
+    {
+      "id": 8,
+      "texto": "Fosfofrutoquinase-1",
+      "confianca": 92.0,
+      "caixa_px": [
+        352,
+        685,
+        196,
+        19
+      ],
+      "posicao": {
+        "esquerda": 0.391,
+        "topo": 0.548,
+        "largura": 0.218,
+        "altura": 0.015
+      }
+    },
+    {
+      "id": 9,
+      "texto": "Frutose-1,6-bisfosfato",
+      "confianca": 91.6,
+      "caixa_px": [
+        182,
+        822,
+        237,
+        19
+      ],
+      "posicao": {
+        "esquerda": 0.202,
+        "topo": 0.658,
+        "largura": 0.263,
+        "altura": 0.015
+      }
+    },
+    {
+      "id": 10,
+      "texto": "Aldolase",
+      "confianca": 92.3,
+      "caixa_px": [
+        350,
+        915,
+        83,
+        15
+      ],
+      "posicao": {
+        "esquerda": 0.389,
+        "topo": 0.732,
+        "largura": 0.092,
+        "altura": 0.012
+      }
+    },
+    {
+      "id": 11,
+      "texto": "Gliceraldeido-3-fosfato",
+      "confianca": 92.2,
+      "caixa_px": [
+        176,
+        1053,
+        248,
+        17
+      ],
+      "posicao": {
+        "esquerda": 0.196,
+        "topo": 0.842,
+        "largura": 0.276,
+        "altura": 0.014
+      }
+    }
+  ],
+  "tamanho": [
+    900,
+    1250
+  ],
+  "versao": 1
+}

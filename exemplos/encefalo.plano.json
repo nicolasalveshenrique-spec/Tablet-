@@ -1,0 +1,248 @@
+{
+  "imagem": "encefalo.png",
+  "titulo": "Divisões do encéfalo",
+  "deck": "Medicina::Anatomia",
+  "modo": "esconder-tudo",
+  "pergunta": "divisoes-encefalo",
+  "disciplina": "anatomia",
+  "aula": "2026-08-10",
+  "verso_extra": "Cérebro = telencéfalo + diencéfalo. Tronco = mesencéfalo + ponte + bulbo.",
+  "comentarios": "",
+  "folga": 0.06,
+  "grupos": [
+    {
+      "rotulo": "Telencéfalo",
+      "tokens": [
+        6
+      ],
+      "caixa": null,
+      "nota": ""
+    },
+    {
+      "rotulo": "Diencéfalo",
+      "tokens": [
+        5
+      ],
+      "caixa": null,
+      "nota": ""
+    },
+    {
+      "rotulo": "Mesencéfalo",
+      "tokens": [
+        7
+      ],
+      "caixa": null,
+      "nota": ""
+    },
+    {
+      "rotulo": "Ponte",
+      "tokens": [
+        8
+      ],
+      "caixa": null,
+      "nota": ""
+    },
+    {
+      "rotulo": "Bulbo",
+      "tokens": [
+        9
+      ],
+      "caixa": null,
+      "nota": ""
+    }
+  ],
+  "candidatos": [
+    {
+      "id": 1,
+      "texto": "Divisoes do encefalo",
+      "confianca": 92.4,
+      "caixa_px": [
+        63,
+        46,
+        347,
+        26
+      ],
+      "posicao": {
+        "esquerda": 0.045,
+        "topo": 0.051,
+        "largura": 0.248,
+        "altura": 0.029
+      }
+    },
+    {
+      "id": 2,
+      "texto": "Encefalo",
+      "confianca": 92.7,
+      "caixa_px": [
+        650,
+        150,
+        100,
+        30
+      ],
+      "posicao": {
+        "esquerda": 0.464,
+        "topo": 0.167,
+        "largura": 0.071,
+        "altura": 0.033
+      }
+    },
+    {
+      "id": 3,
+      "texto": "Cerebro",
+      "confianca": 96.2,
+      "caixa_px": [
+        334,
+        323,
+        92,
+        18
+      ],
+      "posicao": {
+        "esquerda": 0.239,
+        "topo": 0.359,
+        "largura": 0.066,
+        "altura": 0.02
+      }
+    },
+    {
+      "id": 4,
+      "texto": "Tronco encefalico",
+      "confianca": 93.2,
+      "caixa_px": [
+        916,
+        323,
+        207,
+        19
+      ],
+      "posicao": {
+        "esquerda": 0.654,
+        "topo": 0.359,
+        "largura": 0.148,
+        "altura": 0.021
+      }
+    },
+    {
+      "id": 5,
+      "texto": "Diencefalo",
+      "confianca": 92.5,
+      "caixa_px": [
+        497,
+        510,
+        124,
+        30
+      ],
+      "posicao": {
+        "esquerda": 0.355,
+        "topo": 0.567,
+        "largura": 0.089,
+        "altura": 0.033
+      }
+    },
+    {
+      "id": 6,
+      "texto": "Telencefalo",
+      "confianca": 92.3,
+      "caixa_px": [
+        133,
+        513,
+        134,
+        18
+      ],
+      "posicao": {
+        "esquerda": 0.095,
+        "topo": 0.57,
+        "largura": 0.096,
+        "altura": 0.02
+      }
+    },
+    {
+      "id": 7,
+      "texto": "Mesencefalo",
+      "confianca": 92.1,
+      "caixa_px": [
+        757,
+        513,
+        148,
+        18
+      ],
+      "posicao": {
+        "esquerda": 0.541,
+        "topo": 0.57,
+        "largura": 0.106,
+        "altura": 0.02
+      }
+    },
+    {
+      "id": 8,
+      "texto": "Ponte",
+      "confianca": 96.2,
+      "caixa_px": [
+        1058,
+        513,
+        65,
+        18
+      ],
+      "posicao": {
+        "esquerda": 0.756,
+        "topo": 0.57,
+        "largura": 0.046,
+        "altura": 0.02
+      }
+    },
+    {
+      "id": 9,
+      "texto": "Bulbo",
+      "confianca": 92.9,
+      "caixa_px": [
+        1268,
+        513,
+        66,
+        18
+      ],
+      "posicao": {
+        "esquerda": 0.906,
+        "topo": 0.57,
+        "largura": 0.047,
+        "altura": 0.02
+      }
+    },
+    {
+      "id": 10,
+      "texto": "Hemisferios cerebrais",
+      "confianca": 94.5,
+      "caixa_px": [
+        72,
+        693,
+        258,
+        18
+      ],
+      "posicao": {
+        "esquerda": 0.051,
+        "topo": 0.77,
+        "largura": 0.184,
+        "altura": 0.02
+      }
+    },
+    {
+      "id": 11,
+      "texto": "Talamo",
+      "confianca": 92.7,
+      "caixa_px": [
+        517,
+        693,
+        84,
+        19
+      ],
+      "posicao": {
+        "esquerda": 0.369,
+        "topo": 0.77,
+        "largura": 0.06,
+        "altura": 0.021
+      }
+    }
+  ],
+  "tamanho": [
+    1400,
+    900
+  ],
+  "versao": 1
+}
