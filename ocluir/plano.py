@@ -16,7 +16,7 @@ import re
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 
-from .oclusao import ESCONDER_TUDO, Forma
+from .oclusao import ESCONDER_TUDO, Forma, uniformizar
 from .ocr import Token
 
 VERSAO = 1
@@ -86,11 +86,51 @@ class Plano:
     verso_extra: str = ""
     comentarios: str = ""
     folga: float = 0.06
+    # Iguala o tamanho de todas as máscaras, para que a largura do retângulo
+    # não entregue o comprimento da palavra. "maior" usa a maior caixa do
+    # conjunto; "0.18x0.04" fixa um tamanho em frações da imagem; vazio desliga.
+    mascara_uniforme: str = "maior"
     grupos: list[Grupo] = field(default_factory=list)
     # Preenchido pelo `ler`; só serve de referência para escolher os ids.
     candidatos: list[dict] = field(default_factory=list)
     tamanho: list[int] = field(default_factory=list)
     versao: int = VERSAO
+
+    # -- geometria ----------------------------------------------------------
+
+    def _alvo_uniforme(self) -> tuple[float, float] | None:
+        valor = (self.mascara_uniforme or "").strip().lower()
+        if valor == "maior":
+            return None  # uniformizar() calcula a maior sozinho
+        largura, _, altura = valor.partition("x")
+        try:
+            return (float(largura), float(altura))
+        except ValueError as erro:
+            raise ValueError(
+                f"mascara_uniforme inválido: {self.mascara_uniforme!r}. Use "
+                '"maior", um tamanho como "0.18x0.04", ou deixe vazio para '
+                "desligar."
+            ) from erro
+
+    def uniformiza(self) -> bool:
+        valor = (self.mascara_uniforme or "").strip().lower()
+        return bool(valor) and valor not in {"nao", "não", "off", "desligado"}
+
+    def formas(self, tokens_por_id: dict[int, Token]) -> list[tuple[str, list[Forma]]]:
+        """Resolve cada grupo em máscaras prontas, já uniformizadas se for o caso.
+
+        É o único lugar que sabe transformar o plano em geometria — a CLI, a
+        prévia, o contrato e os dois caminhos de saída chamam daqui, para que
+        todos vejam exatamente as mesmas máscaras.
+        """
+        tamanho = tuple(self.tamanho) if self.tamanho else (1, 1)
+        rotulos = [g.rotulo for g in self.grupos]
+        formas = [g.formas(tokens_por_id, tamanho, self.folga) for g in self.grupos]
+
+        if self.uniformiza():
+            formas = uniformizar(formas, self._alvo_uniforme())
+
+        return list(zip(rotulos, formas))
 
     # -- tags ---------------------------------------------------------------
 

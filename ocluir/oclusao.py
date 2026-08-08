@@ -78,6 +78,67 @@ class Forma:
         return f"{{{{c{ordinal}::image-occlusion:rect{corpo}}}}}"
 
 
+def uniformizar(
+    grupos: list[list[Forma]], alvo: tuple[float, float] | None = None
+) -> list[list[Forma]]:
+    """Iguala o tamanho de todas as máscaras, mantendo cada uma centrada.
+
+    Por que isto importa, e não é estética: **a largura da máscara entrega o
+    tamanho da palavra.** Numa prancha com "Ponte" e "Fosfofrutoquinase-1"
+    ocluídas, o retângulo curto só pode ser a primeira. O cartão passa a ser
+    respondível pela geometria, sem saber anatomia — e a revisão vira treino de
+    reconhecer o formato do borrão.
+
+    Com todas do mesmo tamanho, a única informação que sobra é a posição, que é
+    exatamente a que o cartão deveria estar cobrando.
+
+    `alvo` em frações de 0 a 1. Sem ele, usa a maior largura e a maior altura
+    encontradas, para que nenhuma máscara fique menor que o texto que cobre.
+    """
+    todas = [forma for grupo in grupos for forma in grupo]
+    if not todas:
+        return grupos
+
+    if alvo is None:
+        largura_alvo = max(f.largura for f in todas)
+        altura_alvo = max(f.altura for f in todas)
+    else:
+        largura_alvo, altura_alvo = alvo
+
+    uniformes: list[list[Forma]] = []
+    for grupo in grupos:
+        novo = []
+        for forma in grupo:
+            centro_x = forma.esquerda + forma.largura / 2
+            centro_y = forma.topo + forma.altura / 2
+            novo.append(
+                Forma(
+                    esquerda=centro_x - largura_alvo / 2,
+                    topo=centro_y - altura_alvo / 2,
+                    largura=largura_alvo,
+                    altura=altura_alvo,
+                ).limitada()
+            )
+        uniformes.append(novo)
+
+    return uniformes
+
+
+def sobreposicao(a: Forma, b: Forma) -> float:
+    """Fração da menor das duas caixas que está dentro da outra."""
+    a, b = a.limitada(), b.limitada()
+    x1 = max(a.esquerda, b.esquerda)
+    y1 = max(a.topo, b.topo)
+    x2 = min(a.esquerda + a.largura, b.esquerda + b.largura)
+    y2 = min(a.topo + a.altura, b.topo + b.altura)
+    if x2 <= x1 or y2 <= y1:
+        return 0.0
+
+    intersecao = (x2 - x1) * (y2 - y1)
+    menor = min(a.largura * a.altura, b.largura * b.altura)
+    return intersecao / menor if menor > 0 else 0.0
+
+
 def montar_campo(grupos: list[list[Forma]], modo: str = ESCONDER_TUDO) -> str:
     """Monta o conteúdo completo do campo `Occlusion`.
 

@@ -9,6 +9,17 @@ merecem virar cartão, acertar o deck e as tags que ligam o cartão à pergunta
 lógica que o originou, e não descobrir a máscara torta três dias depois na
 revisão.
 
+## Dois caminhos, porque o AnkiConnect não existe no AnkiDroid
+
+| | **computador** | **tablet** |
+|---|---|---|
+| destino | Anki no Windows | AnkiDroid, direto |
+| como | AnkiConnect, na hora | arquivo `.apkg` |
+| precisa de PC | sim | **não** |
+| comando | `ocluir enviar` | `ocluir empacotar` |
+
+Detalhes dos dois, e do caminho pelo chat do Claude: [docs/dois-caminhos.md](docs/dois-caminhos.md).
+
 ## O desenho em uma frase
 
 Um modelo de visão sabe *o que* importa numa imagem e erra *onde exatamente*
@@ -100,12 +111,33 @@ segunda antes de enviar.**
 
 ### 4. Enviar
 
+**Para o Anki no computador**, com o Anki aberto:
+
 ```
 python -m ocluir enviar slide.plano.json
 ```
 
-Guarda a imagem na mídia do Anki, monta o campo `Occlusion`, aplica deck e tags,
-e cria a nota. Com o Anki aberto.
+**Para o AnkiDroid**, sem computador na equação:
+
+```
+python -m ocluir empacotar slide.plano.json -o cartoes.apkg --conferir
+```
+
+Manda o `.apkg` para o tablet (Drive, e-mail, cabo) e toca nele. As imagens vão
+dentro do arquivo. O `--conferir` reimporta o pacote com a biblioteca oficial do
+Anki e relata o que entrou — vale a pena, porque pacote malformado só falha na
+importação, no aparelho.
+
+### Sem Tesseract
+
+```
+python -m ocluir caixas slide.png --titulo "Glicólise"
+```
+
+Acha as caixas de texto por análise de imagem e escreve uma versão numerada.
+Este método **mede, não lê** — quem diz que a caixa 3 é a hexoquinase é você,
+olhando a imagem numerada. É o caminho que funciona no chat do Claude, via
+`chat/ocluir_chat.py`, que é o projeto inteiro num arquivo só.
 
 ### Extra: PDF do professor
 
@@ -113,6 +145,16 @@ e cria a nota. Com o Anki aberto.
 pip install pypdfium2
 python -m ocluir pdf aula.pdf --paginas 12-18
 ```
+
+## Máscaras do mesmo tamanho
+
+Ligado por padrão. A largura da máscara é informação: com "Ponte" e
+"Fosfofrutoquinase-1" ocluídas, o retângulo curto só pode ser o primeiro, e o
+cartão fica respondível pela geometria. Iguala-se o tamanho para que a única
+pista seja a posição.
+
+No plano, o campo `mascara_uniforme`: `"maior"` (padrão), um tamanho fixo como
+`"0.18x0.04"`, ou vazio para desligar.
 
 ## O contrato do cartão
 
@@ -127,6 +169,7 @@ método, não do Anki:
 | rótulo com mais de 5 palavras | aviso | rótulo longo é mecanismo disfarçado de âncora |
 | sem `pergunta` | aviso | o cartão nasce solto, sem vínculo com o mecanismo |
 | máscara minúscula ou de área zero | aviso | quase sempre é ruído do OCR |
+| duas máscaras se sobrepondo >25% | aviso | ao igualar tamanhos, a curta cresce e invade a vizinha |
 
 `--forcar` passa por cima. Ele existe para quando a decisão foi consciente, não
 para silenciar o aviso por pressa.
@@ -154,9 +197,18 @@ pip install pytest
 python -m pytest tests/ -q
 ```
 
-84 testes, incluindo um AnkiConnect falso que valida o corpo exato das
-requisições — inclusive com a interface do Anki em português, caso em que os
-campos do notetype mudam de nome e o mapeamento por posição é o que salva.
+146 testes. Os dois que mais valem:
+
+- um **AnkiConnect falso** que valida o corpo exato das requisições, inclusive
+  com a interface do Anki em português, caso em que os campos do notetype mudam
+  de nome e o mapeamento por posição é o que salva;
+- o `.apkg` gerado **sem dependência nenhuma** é reimportado pela biblioteca
+  **oficial** do Anki e conferido do outro lado. Escrever com uma implementação e
+  ler com outra, independente, é o que dá confiança de que o arquivo chega
+  inteiro no AnkiDroid.
+
+`pip install anki` habilita o segundo grupo; sem ele esses testes são pulados,
+porque gerar o pacote não precisa da biblioteca — esse é justamente o ponto.
 
 ## O que este projeto deliberadamente não faz
 

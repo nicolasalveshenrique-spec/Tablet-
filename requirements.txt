@@ -2,3 +2,7 @@ pillow>=10.0
 requests>=2.31
 # opcional, só para o comando `ocluir pdf`
 pypdfium2>=4.30
+
+# opcional: habilita `ocluir empacotar --conferir` e os testes que validam
+# o .apkg reimportando-o. Gerar o pacote NÃO precisa dela.
+anki>=23.10

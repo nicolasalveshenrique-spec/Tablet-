@@ -12,6 +12,7 @@ from .contrato import ERRO, tem_erro, verificar
 from .oclusao import ESCONDER_TUDO, MODOS, contar_cartoes, montar_campo
 from .ocr import TesseractAusente, Token, extrair_tokens
 from .plano import Plano, plano_a_partir_do_ocr, slugificar
+from . import caixas as caixas_mod
 from . import previa as previa_mod
 
 
@@ -55,12 +56,7 @@ def _tokens_do_plano(plano: Plano) -> dict[int, Token]:
 
 
 def _formas_dos_grupos(plano: Plano):
-    tokens = _tokens_do_plano(plano)
-    tamanho = tuple(plano.tamanho) if plano.tamanho else (1, 1)
-    return [
-        (grupo.rotulo, grupo.formas(tokens, tamanho, plano.folga))
-        for grupo in plano.grupos
-    ]
+    return plano.formas(_tokens_do_plano(plano))
 
 
 # --------------------------------------------------------------------------
@@ -320,6 +316,161 @@ def _interpretar_intervalo(texto: str, total: int) -> range | list[int] | None:
 # --------------------------------------------------------------------------
 
 
+# --------------------------------------------------------------------------
+# caixas — achar rótulos sem OCR
+# --------------------------------------------------------------------------
+
+
+def comando_caixas(args) -> int:
+    """Detecta caixas de texto por análise de imagem, sem Tesseract.
+
+    Serve para o caminho do chat, onde não há OCR: a medição sai daqui e a
+    leitura ("a caixa 3 é a hexoquinase") sai da visão, olhando a imagem
+    numerada que este comando escreve.
+    """
+    caminho = Path(args.imagem)
+    try:
+        detectadas, tamanho = caixas_mod.detectar(
+            caminho,
+            densidade_minima=args.densidade,
+            limite_de_linha=args.limite_de_linha,
+        )
+    except FileNotFoundError as e:
+        return _erro(str(e))
+
+    if not detectadas:
+        return _erro(
+            "Nenhuma caixa de texto encontrada. Se a imagem tiver fundo "
+            "complexo (foto, atlas sombreado), este método não serve — use "
+            "'ocluir ler', que usa OCR, ou marque as caixas à mão no plano."
+        )
+
+    destino = Path(args.saida) if args.saida else caminho.with_name(
+        f"{caminho.stem}-caixas.png"
+    )
+    caixas_mod.desenhar_numeradas(caminho, detectadas, destino)
+
+    plano = Plano(
+        imagem=caminho.name,
+        tamanho=[tamanho[0], tamanho[1]],
+        titulo=args.titulo or "",
+        deck=args.deck,
+        modo=args.modo,
+        pergunta=args.pergunta or "",
+        disciplina=args.disciplina or "",
+        aula=args.aula or "",
+        candidatos=[
+            {
+                "id": c.id,
+                "texto": "",
+                "confianca": 0.0,
+                "caixa_px": list(c.caixa),
+                "posicao": {
+                    "esquerda": round(c.caixa[0] / tamanho[0], 3),
+                    "topo": round(c.caixa[1] / tamanho[1], 3),
+                    "largura": round(c.caixa[2] / tamanho[0], 3),
+                    "altura": round(c.caixa[3] / tamanho[1], 3),
+                },
+            }
+            for c in detectadas
+        ],
+    )
+    caminho_plano = Path(args.plano) if args.plano else caminho.with_suffix(
+        ".plano.json"
+    )
+    plano.salvar(caminho_plano)
+
+    print(f"\n{len(detectadas)} caixas de texto em {caminho.name} "
+          f"({tamanho[0]}×{tamanho[1]} px)\n")
+    for c in detectadas:
+        esq, topo, larg, alt = c.caixa
+        print(f"  {c.id:>3}.  x={esq:>5} y={topo:>5}  {larg:>4}×{alt:<4} "
+              f"densidade {c.densidade}")
+
+    print(f"\n  imagem numerada: {destino}")
+    print(f"  plano:           {caminho_plano}")
+    print(
+        "\nO campo 'texto' dos candidatos está vazio de propósito: este método\n"
+        "mede, não lê. Olhe a imagem numerada e diga qual número é qual rótulo.\n"
+    )
+    return 0
+
+
+# --------------------------------------------------------------------------
+# empacotar — .apkg para o AnkiDroid
+# --------------------------------------------------------------------------
+
+
+def comando_empacotar(args) -> int:
+    from . import portatil
+
+    notas = []
+    for caminho_plano in args.planos:
+        caminho_plano = Path(caminho_plano)
+        try:
+            plano = Plano.carregar(caminho_plano)
+        except (ValueError, KeyError, TypeError) as e:
+            return _erro(f"{caminho_plano}: {e}")
+
+        imagem = caminho_plano.parent / plano.imagem
+        if not imagem.exists():
+            return _erro(f"Imagem do plano não encontrada: {imagem}")
+
+        achados = verificar(plano, _tokens_do_plano(plano))
+        for achado in achados:
+            print(f"{caminho_plano.name}:")
+            print(achado)
+        if tem_erro(achados) and not args.forcar:
+            return _erro(
+                f"{caminho_plano.name} tem erros de contrato. Corrija, ou use --forcar."
+            )
+
+        try:
+            grupos = _formas_dos_grupos(plano)
+            campo = montar_campo([f for _, f in grupos], plano.modo)
+        except ValueError as e:
+            return _erro(f"{caminho_plano.name}: {e}")
+
+        notas.append(
+            portatil.NotaPortatil(
+                imagem=imagem,
+                campo_occlusion=campo,
+                cabecalho=plano.titulo,
+                verso_extra=plano.verso_extra,
+                comentarios=plano.comentarios,
+                tags=plano.tags(),
+                deck=plano.deck,
+            )
+        )
+
+    destino = Path(args.saida)
+    try:
+        caminho, total = portatil.gerar_apkg(notas, destino)
+    except (ValueError, FileNotFoundError) as e:
+        return _erro(str(e))
+
+    print(f"\n{caminho}  ({caminho.stat().st_size // 1024} KB)")
+    print(f"  {len(notas)} notas, {total} cartões")
+    print(f"  decks: {', '.join(sorted({n.deck for n in notas}))}")
+
+    if args.conferir:
+        try:
+            from . import pacote
+
+            relatorio = pacote.conferir(caminho)
+            print("\n  conferido reimportando com a biblioteca do Anki:")
+            print(f"    notas={relatorio['notas']} cartoes={relatorio['cartoes']} "
+                  f"notetype={relatorio['notetype']!r} stock_kind={relatorio['stock_kind']}")
+        except Exception as e:  # noqa: BLE001 — a conferência é opcional
+            print(f"\n  (conferência indisponível: {e})")
+
+    print(
+        "\nPara o AnkiDroid: mande o arquivo para o tablet (Drive, e-mail, cabo)\n"
+        "e toque nele. O AnkiDroid importa as notas e as imagens juntas.\n"
+    )
+    return 0
+
+
 def construir_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="ocluir",
@@ -371,6 +522,37 @@ def construir_parser() -> argparse.ArgumentParser:
     p_enviar.add_argument("--endereco", default="http://127.0.0.1:8765")
     p_enviar.add_argument("--forcar", action="store_true", help="ignora erros de contrato")
     p_enviar.set_defaults(funcao=comando_enviar)
+
+    p_caixas = sub.add_parser(
+        "caixas", help="acha caixas de texto sem OCR (para quando não há Tesseract)"
+    )
+    p_caixas.add_argument("imagem")
+    p_caixas.add_argument("-o", "--saida", help="imagem numerada de saída")
+    p_caixas.add_argument("--plano", help="caminho do plano gerado")
+    p_caixas.add_argument("--densidade", type=float, default=0.06)
+    p_caixas.add_argument(
+        "--limite-de-linha", type=int, dest="limite_de_linha",
+        help="comprimento acima do qual um traço é moldura, não letra",
+    )
+    p_caixas.add_argument("--titulo")
+    p_caixas.add_argument("--deck", default="Medicina::Anatomia")
+    p_caixas.add_argument("--modo", choices=MODOS, default=ESCONDER_TUDO)
+    p_caixas.add_argument("--pergunta")
+    p_caixas.add_argument("--disciplina")
+    p_caixas.add_argument("--aula")
+    p_caixas.set_defaults(funcao=comando_caixas)
+
+    p_empacotar = sub.add_parser(
+        "empacotar", help="gera um .apkg para importar no AnkiDroid"
+    )
+    p_empacotar.add_argument("planos", nargs="+")
+    p_empacotar.add_argument("-o", "--saida", default="cartoes.apkg")
+    p_empacotar.add_argument("--forcar", action="store_true")
+    p_empacotar.add_argument(
+        "--conferir", action="store_true",
+        help="reimporta o pacote com a biblioteca do Anki para validar",
+    )
+    p_empacotar.set_defaults(funcao=comando_empacotar)
 
     p_pdf = sub.add_parser("pdf", help="extrai páginas de um PDF como imagem")
     p_pdf.add_argument("arquivo")

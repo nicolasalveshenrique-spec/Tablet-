@@ -9,6 +9,7 @@
   "verso_extra": "Cérebro = telencéfalo + diencéfalo. Tronco = mesencéfalo + ponte + bulbo.",
   "comentarios": "",
   "folga": 0.06,
+  "mascara_uniforme": "maior",
   "grupos": [
     {
       "rotulo": "Telencéfalo",

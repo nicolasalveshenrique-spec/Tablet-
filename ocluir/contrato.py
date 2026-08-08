@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from .oclusao import sobreposicao
 from .plano import Plano
 
 ERRO = "erro"
@@ -150,7 +151,46 @@ def verificar(plano: Plano, tokens_por_id: dict) -> list[Achado]:
                     Achado(ERRO, f"{rotulo!r}: máscara com largura ou altura zero.")
                 )
 
+    _checar_sobreposicao(plano, tokens_por_id, achados)
     return achados
+
+
+# Duas máscaras que se cobrem em mais que isto disputam o mesmo espaço: a de um
+# cartão apaga o rótulo do outro, e a resposta some junto.
+SOBREPOSICAO_MAXIMA = 0.25
+
+
+def _checar_sobreposicao(plano: Plano, tokens_por_id: dict, achados: list) -> None:
+    """Máscara uniforme é maior que o texto, e pode invadir o rótulo vizinho.
+
+    É o efeito colateral de igualar os tamanhos: a máscara da palavra curta
+    cresce até o tamanho da mais longa. Em diagrama apertado isso encosta no
+    vizinho, e aí o cartão esconde a própria resposta do cartão seguinte.
+    """
+    try:
+        grupos = plano.formas(tokens_por_id)
+    except (ValueError, KeyError):
+        return  # os erros de forma já foram relatados acima
+
+    for i in range(len(grupos)):
+        for j in range(i + 1, len(grupos)):
+            rotulo_a, formas_a = grupos[i]
+            rotulo_b, formas_b = grupos[j]
+            pior = max(
+                (sobreposicao(a, b) for a in formas_a for b in formas_b),
+                default=0.0,
+            )
+            if pior > SOBREPOSICAO_MAXIMA:
+                achados.append(
+                    Achado(
+                        AVISO,
+                        f"As máscaras de {rotulo_a!r} e {rotulo_b!r} se sobrepõem "
+                        f"em {pior:.0%}. Com máscara uniforme isso acontece quando "
+                        "rótulos vizinhos têm comprimentos muito diferentes — "
+                        'considere fixar um tamanho menor em "mascara_uniforme" '
+                        "ou desligar a uniformização nesta imagem."
+                    )
+                )
 
 
 def tem_erro(achados: list[Achado]) -> bool:
