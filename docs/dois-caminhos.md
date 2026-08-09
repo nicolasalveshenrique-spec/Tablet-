@@ -150,7 +150,59 @@ Escrever com uma implementação (sem dependência) e ler com outra, independent
 é o que dá confiança de que o arquivo chega inteiro.
 
 **Não verificado aqui:** a importação num AnkiDroid de verdade. Não há aparelho
-Android neste ambiente. O AnkiDroid usa a mesma engine Rust do Anki desde a
-versão 2.17, então a expectativa é que se comporte igual — mas isso é
-expectativa fundamentada, não teste. O primeiro `.apkg` que você importar é o
-teste que falta.
+Android neste ambiente.
+
+E essa lacuna já cobrou o preço uma vez.
+
+## O erro que só o aparelho encontrou
+
+O primeiro pacote gerado importava sem queixa na biblioteca de computador e o
+AnkiDroid recusava com:
+
+```
+500: Failed to read '…/ocluir-teste-ankidroid.apkg':
+stream did not contain valid UTF-8
+```
+
+A causa era estrutural. Um `.apkg` pode estar em três formatos, e quem decide
+qual é um arquivo `meta` dentro do zip:
+
+| Formato | Como se reconhece | Coleção fica em |
+|---|---|---|
+| Legacy1 | sem `meta` | `collection.anki2` |
+| Legacy2 | `meta` com versão 2 | `collection.anki21` |
+| Novo | `meta` com versão 3 | `collection.anki21b` (zstd) |
+
+O escritor portátil produzia **Legacy1** — formalmente válido, e é por isso que
+a biblioteca de computador o aceitava. Mas o AnkiDroid exercita esse caminho
+antigo de um jeito diferente, e o mapa de mídia acabava sendo lido como se
+fosse outro arquivo, dando o erro de UTF-8.
+
+A correção foi passar a emitir **Legacy2**, que é exatamente o que o próprio
+Anki exporta com `legacy=True`: `meta` com versão 2, dados em
+`collection.anki21`, e `collection.anki2` mantido como resquício para clientes
+antigos.
+
+A lição, que vale além deste caso: **imitar o que a ferramenta produz é mais
+seguro que imitar o que o formato permite.** Um formato aceita muitas coisas
+que só um dos leitores implementa bem, e testar contra um leitor não é testar
+contra todos.
+
+Há agora um teste que trava a estrutura do zip contra a do exportador oficial —
+mesmas entradas, mesmo `meta` — para que a regressão não volte silenciosamente.
+
+## Duas vias para escrever o pacote
+
+```
+ocluir empacotar plano.json -o cartoes.apkg --via oficial
+```
+
+| `--via` | Quem escreve | Quando usar |
+|---|---|---|
+| `auto` (padrão) | oficial se instalada, senão portátil | o caso normal |
+| `oficial` | biblioteca do Anki (`pip install anki`) | máxima compatibilidade |
+| `portatil` | só biblioteca padrão | onde não dá para instalar nada — o chat |
+
+As duas produzem o mesmo conjunto de entradas no zip. A oficial é maior porque
+carrega índices e estatísticas que o Anki gera; nenhuma das duas é mais correta
+que a outra, mas a oficial é, por construção, idêntica ao que sai do programa.

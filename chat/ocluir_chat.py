@@ -444,6 +444,19 @@ SEPARADOR_DE_CAMPOS = "\x1f"
 ESQUEMA = 11
 ORIGINAL_STOCK_KIND_IMAGE_OCCLUSION = 6
 
+# O `meta` é um protobuf de um campo só: `version = 2`, que é o "Legacy2".
+# Sem ele o importador cai no caminho "Legacy1", e foi exatamente aí que o
+# AnkiDroid quebrou com "stream did not contain valid UTF-8" — um pacote que a
+# biblioteca de computador lia sem reclamar.
+#
+# Legacy2 é a forma que o próprio Anki exporta com `legacy=True`: os dados vão
+# em `collection.anki21` e `collection.anki2` fica como resquício para clientes
+# muito antigos. Imitar o que o Anki produz é mais seguro que imitar o que a
+# documentação permite.
+META_LEGACY2 = b"\x08\x02"
+NOME_DA_COLECAO = "collection.anki21"
+NOME_DA_COLECAO_ANTIGA = "collection.anki2"
+
 CAMPOS = ["Occlusion", "Image", "Header", "Back Extra", "Comments"]
 
 _QFMT = """{{#Header}}<div>{{Header}}</div>{{/Header}}
@@ -793,8 +806,14 @@ def gerar_apkg(notas: list[NotaPortatil], destino: Path | str) -> tuple[Path, in
                 break
 
     with zipfile.ZipFile(destino, "w", zipfile.ZIP_DEFLATED) as pacote:
-        pacote.write(caminho_sqlite, "collection.anki2")
-        pacote.writestr("media", json.dumps(midias))
+        pacote.writestr("meta", META_LEGACY2)
+        # A mesma base entra com os dois nomes: o importador moderno lê
+        # `collection.anki21` porque o `meta` diz versão 2, e o antigo lê
+        # `collection.anki2`. Duplicar comprimido custa pouco e evita ter de
+        # decidir o que um cliente de 2018 deveria ver.
+        pacote.write(caminho_sqlite, NOME_DA_COLECAO)
+        pacote.write(caminho_sqlite, NOME_DA_COLECAO_ANTIGA)
+        pacote.writestr("media", json.dumps(midias, separators=(",", ":")))
         for indice, caminho in caminhos_de_midia.items():
             pacote.write(caminho, indice)
 

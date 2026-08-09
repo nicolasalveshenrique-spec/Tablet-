@@ -259,3 +259,90 @@ class TestConferidoPelaLibOficial:
                 assert colecao.find_notes("tag:disc::anatomia")
             finally:
                 colecao.close()
+
+
+class TestFormatoLegacy2:
+    """Regressão do erro de importação no AnkiDroid.
+
+    O primeiro pacote gerado trazia só `collection.anki2` e nenhum `meta`. A
+    biblioteca de computador lia sem reclamar, e o AnkiDroid recusava com
+    "stream did not contain valid UTF-8" — um caminho de importação antigo que
+    só o aparelho exercita.
+
+    A correção foi imitar o que o próprio Anki exporta com `legacy=True`, e é
+    isso que estes testes travam. Imitar o que a ferramenta produz é mais
+    seguro que imitar o que o formato permite.
+    """
+
+    def _entradas(self, imagem, campo, tmp_path):
+        import zipfile
+
+        destino, _ = gerar_apkg(
+            [NotaPortatil(imagem=imagem, campo_occlusion=campo)],
+            tmp_path / "saida.apkg",
+        )
+        with zipfile.ZipFile(destino) as pacote_zip:
+            return destino, pacote_zip, {i.filename for i in pacote_zip.infolist()}
+
+    def test_tem_o_meta_de_versao_2(self, imagem, campo_com_tres_cartoes, tmp_path):
+        import zipfile
+
+        destino, _ = gerar_apkg(
+            [NotaPortatil(imagem=imagem, campo_occlusion=campo_com_tres_cartoes)],
+            tmp_path / "saida.apkg",
+        )
+        with zipfile.ZipFile(destino) as pacote_zip:
+            assert "meta" in pacote_zip.namelist()
+            # protobuf de um campo: version = 2
+            assert pacote_zip.read("meta") == b"\x08\x02"
+
+    def test_traz_os_dois_nomes_de_colecao(self, imagem, campo_com_tres_cartoes, tmp_path):
+        import zipfile
+
+        destino, _ = gerar_apkg(
+            [NotaPortatil(imagem=imagem, campo_occlusion=campo_com_tres_cartoes)],
+            tmp_path / "saida.apkg",
+        )
+        with zipfile.ZipFile(destino) as pacote_zip:
+            nomes = set(pacote_zip.namelist())
+            assert "collection.anki21" in nomes, "o importador moderno lê este"
+            assert "collection.anki2" in nomes, "clientes antigos leem este"
+
+    def test_o_mapa_de_midia_e_json_valido_em_utf8(
+        self, imagem, campo_com_tres_cartoes, tmp_path
+    ):
+        """O erro relatado veio justamente de um JSON que não decodificava."""
+        import json
+        import zipfile
+
+        destino, _ = gerar_apkg(
+            [NotaPortatil(imagem=imagem, campo_occlusion=campo_com_tres_cartoes)],
+            tmp_path / "saida.apkg",
+        )
+        with zipfile.ZipFile(destino) as pacote_zip:
+            bruto = pacote_zip.read("media")
+
+        mapa = json.loads(bruto.decode("utf-8"))
+        assert mapa == {"0": "diagrama.png"}
+
+    def test_a_estrutura_bate_com_a_do_exportador_oficial(
+        self, imagem, campo_com_tres_cartoes, tmp_path
+    ):
+        """Mesmo conjunto de entradas que o Anki produz com legacy=True."""
+        if not TEM_ANKI:
+            pytest.skip("biblioteca anki ausente")
+
+        import zipfile
+
+        meu, _ = gerar_apkg(
+            [NotaPortatil(imagem=imagem, campo_occlusion=campo_com_tres_cartoes)],
+            tmp_path / "meu.apkg",
+        )
+        oficial, _ = pacote.montar(
+            [pacote.NotaDeOclusao(imagem=imagem, campo_occlusion=campo_com_tres_cartoes)],
+            tmp_path / "oficial.apkg",
+        )
+
+        with zipfile.ZipFile(meu) as a, zipfile.ZipFile(oficial) as b:
+            assert set(a.namelist()) == set(b.namelist())
+            assert a.read("meta") == b.read("meta")

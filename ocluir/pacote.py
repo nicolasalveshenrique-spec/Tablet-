@@ -46,6 +46,7 @@ class NotaDeOclusao:
     verso_extra: str = ""
     comentarios: str = ""
     tags: list[str] | None = None
+    deck: str = "Medicina::Anatomia"
 
 
 def _abrir_colecao(caminho: Path):
@@ -82,7 +83,7 @@ def _notetype_de_oclusao(colecao):
 def montar(
     notas: list[NotaDeOclusao],
     destino: Path | str,
-    deck: str = "Medicina::Anatomia",
+    deck: str | None = None,
 ) -> tuple[Path, int]:
     """Escreve o `.apkg` e devolve (caminho, quantidade de cartões gerados)."""
     if not notas:
@@ -97,8 +98,11 @@ def montar(
         colecao = _abrir_colecao(Path(temporario) / "montagem.anki2")
         try:
             notetype = _notetype_de_oclusao(colecao)
-            id_do_deck = colecao.decks.id(deck)
             nomes_dos_campos = [c["name"] for c in notetype["flds"]]
+            # `deck` como argumento sobrepõe o de cada nota; sem ele, cada uma
+            # vai para o seu, que é o que permite empacotar anatomia e
+            # bioquímica no mesmo arquivo.
+            ids_de_decks: dict[str, int] = {}
 
             cartoes = 0
             for nota in notas:
@@ -122,7 +126,10 @@ def montar(
                         registro[nomes_dos_campos[posicao]] = valor
 
                 registro.tags = list(nota.tags or [])
-                colecao.add_note(registro, id_do_deck)
+                nome_do_deck = deck or nota.deck
+                if nome_do_deck not in ids_de_decks:
+                    ids_de_decks[nome_do_deck] = colecao.decks.id(nome_do_deck)
+                colecao.add_note(registro, ids_de_decks[nome_do_deck])
                 cartoes += len(registro.card_ids())
 
             opcoes = import_export_pb2.ExportAnkiPackageOptions(

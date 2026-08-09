@@ -444,10 +444,49 @@ def comando_empacotar(args) -> int:
         )
 
     destino = Path(args.saida)
+
+    # A biblioteca oficial produz exatamente o que o próprio Anki exporta, o
+    # que é a garantia mais forte de compatibilidade disponível. O escritor
+    # portátil existe para onde ela não pode ser instalada — o sandbox do chat.
+    via = args.via
+    if via == "auto":
+        try:
+            import anki.collection  # noqa: F401
+
+            via = "oficial"
+        except ImportError:
+            via = "portatil"
+
     try:
-        caminho, total = portatil.gerar_apkg(notas, destino)
+        if via == "oficial":
+            from . import pacote as pacote_oficial
+
+            caminho, total = pacote_oficial.montar(
+                [
+                    pacote_oficial.NotaDeOclusao(
+                        imagem=n.imagem,
+                        campo_occlusion=n.campo_occlusion,
+                        cabecalho=n.cabecalho,
+                        verso_extra=n.verso_extra,
+                        comentarios=n.comentarios,
+                        tags=n.tags,
+                        deck=n.deck,
+                    )
+                    for n in notas
+                ],
+                destino,
+            )
+        else:
+            caminho, total = portatil.gerar_apkg(notas, destino)
     except (ValueError, FileNotFoundError) as e:
         return _erro(str(e))
+    except ImportError:
+        return _erro(
+            "A via 'oficial' precisa da biblioteca do Anki: pip install anki\n"
+            "Ou use --via portatil, que não depende de nada."
+        )
+
+    print(f"\n  via: {via}")
 
     print(f"\n{caminho}  ({caminho.stat().st_size // 1024} KB)")
     print(f"  {len(notas)} notas, {total} cartões")
@@ -548,6 +587,13 @@ def construir_parser() -> argparse.ArgumentParser:
     p_empacotar.add_argument("planos", nargs="+")
     p_empacotar.add_argument("-o", "--saida", default="cartoes.apkg")
     p_empacotar.add_argument("--forcar", action="store_true")
+    p_empacotar.add_argument(
+        "--via",
+        choices=("auto", "oficial", "portatil"),
+        default="auto",
+        help="quem escreve o pacote: a biblioteca do Anki (mais compatível) "
+        "ou o escritor sem dependência. auto usa a oficial se estiver instalada",
+    )
     p_empacotar.add_argument(
         "--conferir", action="store_true",
         help="reimporta o pacote com a biblioteca do Anki para validar",
