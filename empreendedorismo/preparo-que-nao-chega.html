@@ -184,12 +184,58 @@
 
   @media print{
     @page{ size: A4; margin: 14mm; }
+    .canvas-wrap{ break-after: page; }
+    .masthead{ gap: 7px; padding-bottom: 9px; }
+    .masthead h1{ font-size: 19pt; }
+    .masthead .subtitle{ font-size: 10pt; line-height: 1.4; }
+    .masthead .inst{ font-size: 8px; }
+    .byline{ font-size: 9px; }
+
+    /* A consulta de celular (max-width 900px) pega na largura da folha e
+       colapsaria a grade em uma coluna. Aqui ela e restaurada. */
+    .canvas{ grid-template-columns: repeat(5, 1fr); grid-template-rows: auto auto; }
+    .blk-partners{ grid-column: 1; grid-row: 1; }
+    .blk-value{ grid-column: 3; grid-row: 1; }
+    .blk-segments{ grid-column: 5; grid-row: 1; }
+    .stack{ grid-template-rows: 1fr 1fr; }
+    .stack-act{ grid-column: 2; grid-row: 1; }
+    .stack-rel{ grid-column: 4; grid-row: 1; }
+    .base{ grid-column: 1 / 6; grid-row: 2; grid-template-columns: 1fr 1fr; }
+    .escutas{ grid-template-columns: repeat(3, 1fr); }
+    .swot{ grid-template-columns: 1fr 1fr; }
+    .blk{ padding: 6px 6px 7px; gap: 4px; }
+    .blk li{ font-size: 7.6px; line-height: 1.32; }
+    .blk ul{ padding-left: 11px; gap: 4px; }
+    .blk-t{ font-size: 7.4px; letter-spacing: .02em; }
+    .blk-n{ font-size: 7px; padding: 1px 3px; }
+    .canvas-note{ font-size: 9.5px; padding: 8px 11px; }
+    .escuta{ padding: 11px 12px 12px; }
+    .escuta blockquote{ font-size: 11px; }
+    .escuta .fact{ font-size: 10px; }
+    .escuta .who{ font-size: 11.5px; }
+    .escuta .role{ font-size: 9px; }
+    .swot-q li{ font-size: 10.5px; }
     body{ background: #fff; color: #000; padding: 0; font-size: 12pt; line-height: 1.5; }
-    .sheet{ max-width: none; gap: 26px; }
+    .sheet{ max-width: none; gap: 15px; }
+    h1{ font-size: 24pt; }
+    .subtitle{ font-size: 11pt; }
+    .sec-head{ margin-bottom: 12px; padding-bottom: 5px; }
+    .prose{ gap: 9px; }
+    .masthead{ gap: 11px; padding-bottom: 14px; }
     .page-break{ break-before: page; }
     .canvas{ border-color: #000; }
     .blk li, .metric dd, .callout p, .escuta .fact, .swot-q li{ color: #000; }
     .no-print{ display: none !important; }
+    .canvas, .swot, .escutas, .blk-n, .swot-q h3 span, .canvas-note{
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .canvas, .swot, .escutas{ background: #9aa5a0; }
+    .metrics{ background: #9aa5a0; }
+    section{ break-inside: auto; }
+    .callout, .escuta, .swot-q, .metric{ break-inside: avoid; }
+    /* na tela a medida curta ajuda a leitura; no papel ela desperdicia um terco da largura */
+    .prose, .callout, .cite, footer, .subtitle{ max-width: none; }
+    .metric{ grid-template-columns: 170px 1fr; }
   }
 </style>
 
@@ -305,7 +351,7 @@
   </section>
 
   <!-- ============ ESCUTA ============ -->
-  <section class="page-break">
+  <section>
     <div class="sec-head">
       <span class="sec-num">01</span>
       <h2>O problema e as três escutas</h2>
@@ -346,7 +392,7 @@
       </article>
     </div>
 
-    <div class="tbl-wrap" style="margin-top:24px">
+    <div class="tbl-wrap no-print" style="margin-top:24px">
       <table>
         <caption>O que as três escutas têm em comum</caption>
         <thead>
@@ -382,7 +428,7 @@
   </section>
 
   <!-- ============ SWOT ============ -->
-  <section class="page-break">
+  <section>
     <div class="sec-head">
       <span class="sec-num">02</span>
       <h2>Análise SWOT do modelo</h2>
@@ -429,7 +475,7 @@
   </section>
 
   <!-- ============ DESFECHO ============ -->
-  <section class="page-break">
+  <section>
     <div class="sec-head">
       <span class="sec-num">03</span>
       <h2>Desfecho e indicadores</h2>
@@ -461,29 +507,29 @@
 
     <div class="callout" style="margin-top:22px">
       <h3>Por que não medir mortalidade nem satisfação</h3>
-      <p>Mortalidade é o indicador mais nobre em saúde, mas é inútil aqui: ninguém morre de exame perdido em número mensurável dentro de 90 dias. Satisfação, por sua vez, sobe com qualquer intervenção visível e não distingue efeito de novidade. Exame não realizado é um evento discreto, contável, já observado pela triagem e com consequência clínica direta — é o número mais próximo do ato que ainda carrega significado clínico.</p>
+      <p>Mortalidade é o indicador mais nobre em saúde e inútil aqui: ninguém morre de exame perdido em número mensurável em 90 dias. Satisfação sobe com qualquer intervenção visível e não distingue efeito de novidade. Exame não realizado é evento discreto, contável, já observado pela triagem — o número mais próximo do ato que ainda carrega significado clínico.</p>
     </div>
   </section>
 
   <!-- ============ ÉTICA ============ -->
-  <section class="page-break">
+  <section>
     <div class="sec-head">
       <span class="sec-num">04</span>
       <h2>Análise ética</h2>
     </div>
 
     <div class="prose">
-      <p>A versão intuitiva desta solução — uma mensagem de WhatsApp com o preparo, ou uma folha personalizada com o nome e o exame do paciente — carrega risco imediato de <b>quebra de sigilo profissional</b>. Um grupo de WhatsApp expõe o telefone de cada participante aos demais e, pelo próprio nome do grupo, revela que aquelas pessoas realizarão determinado exame. Uma folha nominal esquecida sobre a mesa, num domicílio compartilhado, revela a mesma coisa. O sigilo, tratado no Capítulo IX do Código de Ética Médica (Resolução CFM nº 2.217/2018), veda revelar fato de que se tenha conhecimento em razão do exercício profissional.</p>
+      <p>A versão intuitiva desta solução — uma mensagem de WhatsApp com o preparo, ou uma folha personalizada com o nome e o exame do paciente — carrega risco imediato de <b>quebra de sigilo profissional</b>. Um grupo de WhatsApp expõe o telefone de cada participante aos demais e, pelo próprio nome do grupo, revela que aquelas pessoas realizarão determinado exame. Uma folha nominal esquecida sobre a mesa, num domicílio compartilhado, revela a mesma coisa. O <b>Art. 73</b> do Código de Ética Médica (Resolução CFM nº 2.217/2018) veda ao médico “revelar fato de que tenha conhecimento em virtude do exercício de sua profissão, salvo por motivo justo, dever legal ou consentimento, por escrito, do paciente”. Seu parágrafo único é ainda mais severo: a proibição permanece <b>mesmo que o fato seja de conhecimento público</b> — de modo que “todo mundo do bairro já sabe” jamais serve de defesa.</p>
       <p>O modelo aqui proposto <b>elimina esse risco por desenho, e não por cuidado operacional</b>: a folha é padronizada por tipo de exame, não por paciente. Não traz nome, número de prontuário nem diagnóstico — apenas o preparo, que é idêntico para todos que farão aquele exame. O único campo preenchido é a data, escrita à caneta no balcão. Nenhum registro é criado e nenhuma base de dados é constituída; não há, portanto, tratamento de dado pessoal sensível na acepção da Lei nº 13.709/2018. O modelo não foi adequado à LGPD: foi desenhado fora do alcance dela.</p>
       <p>Permanece um risco residual de natureza distinta, e é o que exige vigilância. Uma folha padronizada pode ser lida como prescrição. Se o texto disser “jejum de doze horas” e o médico de um paciente específico houver determinado outra conduta — pela diabetes, pelo anticoagulante, pela idade — a folha estará contradizendo o ato médico individual. Por isso o material deve trazer, em posição fixa e destacada, a advertência de que as orientações são gerais e que qualquer instrução do médico assistente prevalece sobre elas. <b>A folha transmite o preparo prescrito; jamais o decide.</b></p>
       <p>Por fim, o limite que fecha o modelo. O <b>Art. 58</b> veda ao médico o exercício mercantilista da Medicina, e o Princípio Fundamental IX estabelece que a Medicina não pode, em nenhuma circunstância ou forma, ser exercida como comércio. Orientar sobre preparo é dever do serviço, já custeado pelo SUS. No instante em que essa folha for vendida ao paciente, patrocinada por laboratório ou usada para direcionar exames a um prestador determinado, ela deixa de ser correção de processo e passa a ser captação — hipótese que os Arts. 59 e 69 alcançam diretamente. A gratuidade e a ausência de marca não são detalhes de implementação: são a condição de existência ética do modelo.</p>
     </div>
 
-    <p class="cite" style="margin-top:16px">Resolução CFM nº 2.217/2018 — Código de Ética Médica: Princípio Fundamental IX; Arts. 58, 59 e 69; Capítulo IX (Sigilo Profissional). Lei nº 13.709/2018 (LGPD), art. 5º, II, quanto a dado pessoal sensível.</p>
+    <p class="cite" style="margin-top:16px">Resolução CFM nº 2.217/2018 — Código de Ética Médica, em vigor desde 2019: Princípio Fundamental IX; Art. 58 (exercício mercantilista); Arts. 59 e 69 (vantagem por encaminhamento e por comercialização); Art. 73 e parágrafo único, Capítulo IX (Sigilo Profissional). Lei nº 13.709/2018 (LGPD), art. 5º, II, quanto a dado pessoal sensível.</p>
   </section>
 
   <!-- ============ REFLEXÃO ============ -->
-  <section class="page-break">
+  <section>
     <div class="sec-head">
       <span class="sec-num">05</span>
       <h2>Reflexão final</h2>
