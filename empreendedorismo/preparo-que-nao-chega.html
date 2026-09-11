@@ -16,6 +16,8 @@
     --stamp-soft:   #E7ECF5;
     --alert:        #A33227;
     --alert-soft:   #F7E9E6;
+    --good:         #2E6B4F;
+    --good-soft:    #E4F0EA;
     --shade:        #EDF1EE;
 
     --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
@@ -37,6 +39,8 @@
       --stamp-soft:  #1E2A3C;
       --alert:       #E2887B;
       --alert-soft:  #35211E;
+      --good:        #7FC9A4;
+      --good-soft:   #17291F;
       --shade:       #1F2624;
     }
   }
@@ -52,6 +56,8 @@
     --stamp-soft:  #1E2A3C;
     --alert:       #E2887B;
     --alert-soft:  #35211E;
+    --good:        #7FC9A4;
+    --good-soft:   #17291F;
     --shade:       #1F2624;
   }
 
@@ -69,23 +75,11 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .sheet{
-    max-width: 1080px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 48px;
-  }
+  .sheet{ max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
 
-  /* ---------- shared type ---------- */
   .eyebrow{
-    font-family: var(--f-display);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    margin: 0;
+    font-family: var(--f-display); font-size: 11px; font-weight: 600;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin: 0;
   }
   h1,h2,h3{ font-family: var(--f-display); text-wrap: balance; margin: 0; }
   h1{ font-size: clamp(30px, 5vw, 42px); font-weight: 700; line-height: 1.1; letter-spacing: -.02em; }
@@ -96,96 +90,29 @@
   .prose{ max-width: var(--measure); display: flex; flex-direction: column; gap: 14px; }
   .prose p{ line-height: 1.75; }
 
-  /* ---------- header ---------- */
-  .masthead{
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    border-bottom: 2px solid var(--ink);
-    padding-bottom: 22px;
-  }
+  .masthead{ display: flex; flex-direction: column; gap: 18px; border-bottom: 2px solid var(--ink); padding-bottom: 22px; }
   .masthead .inst{
-    font-family: var(--f-display);
-    font-size: 11px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    line-height: 1.7;
+    font-family: var(--f-display); font-size: 11px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--ink-soft); line-height: 1.7;
   }
-  .subtitle{
-    font-size: 18px;
-    color: var(--ink-soft);
-    max-width: 58ch;
-    line-height: 1.5;
-  }
-  .byline{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 28px;
-    font-family: var(--f-display);
-    font-size: 12px;
-    color: var(--ink-soft);
-  }
+  .subtitle{ font-size: 18px; color: var(--ink-soft); max-width: 58ch; line-height: 1.5; }
+  .byline{ display: flex; flex-wrap: wrap; gap: 8px 28px; font-family: var(--f-display); font-size: 12px; color: var(--ink-soft); }
   .byline b{ color: var(--ink); font-weight: 600; }
 
-  /* ---------- section head ---------- */
-  .sec-head{
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-    border-bottom: 1px solid var(--rule-strong);
-    padding-bottom: 8px;
-    margin-bottom: 20px;
-  }
-  .sec-num{
-    font-family: var(--f-display);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .1em;
-    color: var(--stamp);
-    font-variant-numeric: tabular-nums;
-    flex: none;
-  }
+  .sec-head{ display: flex; align-items: baseline; gap: 14px; border-bottom: 1px solid var(--rule-strong); padding-bottom: 8px; margin-bottom: 20px; }
+  .sec-num{ font-family: var(--f-display); font-size: 12px; font-weight: 700; letter-spacing: .1em; color: var(--stamp); font-variant-numeric: tabular-nums; flex: none; }
 
   /* ---------- CANVAS ---------- */
   .canvas-wrap{ display: flex; flex-direction: column; gap: 14px; }
-  .canvas{
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: auto auto;
-    border: 1.5px solid var(--ink);
-    background: var(--rule);
-    gap: 1px;
-  }
-  .blk{
-    background: var(--card);
-    padding: 12px 13px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-width: 0;
-  }
+  .canvas{ display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: auto auto; border: 1.5px solid var(--ink); background: var(--rule); gap: 1px; }
+  .blk{ background: var(--card); padding: 12px 13px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
   .blk-head{ display: flex; align-items: baseline; gap: 7px; }
   .blk-n{
-    font-family: var(--f-display);
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--stamp);
-    background: var(--stamp-soft);
-    padding: 2px 5px;
-    border-radius: 2px;
-    font-variant-numeric: tabular-nums;
-    flex: none;
+    font-family: var(--f-display); font-size: 10px; font-weight: 700; color: var(--stamp);
+    background: var(--stamp-soft); padding: 2px 5px; border-radius: 2px;
+    font-variant-numeric: tabular-nums; flex: none;
   }
-  .blk-t{
-    font-family: var(--f-display);
-    font-size: 11.5px;
-    font-weight: 600;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    line-height: 1.25;
-    color: var(--ink);
-  }
+  .blk-t{ font-family: var(--f-display); font-size: 11.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; line-height: 1.25; color: var(--ink); }
   .blk ul{ margin: 0; padding-left: 15px; display: flex; flex-direction: column; gap: 6px; }
   .blk li{ font-size: 12.5px; line-height: 1.42; color: var(--ink-soft); }
   .blk li b{ color: var(--ink); font-weight: 600; }
@@ -198,106 +125,70 @@
   .stack-rel{ grid-column: 4; grid-row: 1; }
   .base{ grid-column: 1 / 6; grid-row: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); }
 
-  .canvas-note{
-    font-size: 12.5px;
-    color: var(--ink-soft);
-    border-left: 3px solid var(--alert);
-    background: var(--alert-soft);
-    padding: 10px 14px;
-    line-height: 1.55;
-  }
+  .canvas-note{ font-size: 12.5px; color: var(--ink-soft); border-left: 3px solid var(--alert); background: var(--alert-soft); padding: 10px 14px; line-height: 1.55; }
   .canvas-note b{ color: var(--ink); }
 
-  /* ---------- listening cards ---------- */
+  /* ---------- SWOT ---------- */
+  .swot{ display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule-strong); }
+  .swot-q{ background: var(--card); padding: 15px 16px 17px; display: flex; flex-direction: column; gap: 9px; min-width: 0; }
+  .swot-q h3{ font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+  .swot-q h3 span{ font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 2px; letter-spacing: .06em; }
+  .pos span{ color: var(--good); background: var(--good-soft); }
+  .neg span{ color: var(--alert); background: var(--alert-soft); }
+  .pos h3{ color: var(--good); }
+  .neg h3{ color: var(--alert); }
+  .swot-q ul{ margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
+  .swot-q li{ font-size: 13px; line-height: 1.45; color: var(--ink-soft); }
+  .swot-q li b{ color: var(--ink); font-weight: 600; }
+
+  /* ---------- escutas ---------- */
   .escutas{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule-strong); }
   .escuta{ background: var(--card); padding: 16px 17px 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
   .escuta .who{ font-family: var(--f-display); font-size: 13.5px; font-weight: 700; color: var(--ink); }
   .escuta .role{ font-family: var(--f-display); font-size: 10.5px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-faint); line-height: 1.5; }
-  .escuta blockquote{
-    margin: 0;
-    font-size: 14.5px;
-    line-height: 1.5;
-    color: var(--ink);
-    border-left: 2px solid var(--stamp);
-    padding-left: 11px;
-    font-style: italic;
-  }
+  .escuta blockquote{ margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--ink); border-left: 2px solid var(--stamp); padding-left: 11px; font-style: italic; }
   .escuta .fact{ font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
 
-  /* ---------- convergence table ---------- */
   .tbl-wrap{ overflow-x: auto; }
   table{ border-collapse: collapse; width: 100%; font-size: 13px; min-width: 520px; }
-  caption{
-    text-align: left;
-    font-family: var(--f-display);
-    font-size: 11px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    padding-bottom: 8px;
-  }
+  caption{ text-align: left; font-family: var(--f-display); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); padding-bottom: 8px; }
   th, td{ text-align: left; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.45; }
   th{ font-family: var(--f-display); font-size: 10.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); border-bottom-color: var(--rule-strong); }
   td:first-child{ font-family: var(--f-display); font-size: 12px; font-weight: 600; color: var(--ink); padding-right: 18px; }
   td.q{ font-style: italic; color: var(--ink-soft); }
 
-  /* ---------- metric rows ---------- */
   .metrics{ display: flex; flex-direction: column; gap: 1px; background: var(--rule); border-top: 1px solid var(--rule-strong); border-bottom: 1px solid var(--rule-strong); }
-  .metric{ background: var(--card); padding: 13px 0 14px; display: grid; grid-template-columns: 190px 1fr; gap: 6px 20px; }
+  .metric{ background: var(--card); padding: 13px 0 14px; display: grid; grid-template-columns: 200px 1fr; gap: 6px 20px; }
   .metric dt{ font-family: var(--f-display); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--stamp); line-height: 1.5; }
   .metric dd{ margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink); }
   .metric.fail dt{ color: var(--alert); }
 
-  /* ---------- callout ---------- */
-  .callout{
-    border: 1px solid var(--rule-strong);
-    border-left: 4px solid var(--stamp);
-    background: var(--card);
-    padding: 16px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    max-width: var(--measure);
-  }
+  .callout{ border: 1px solid var(--rule-strong); border-left: 4px solid var(--stamp); background: var(--card); padding: 16px 18px; display: flex; flex-direction: column; gap: 9px; max-width: var(--measure); }
   .callout.warn{ border-left-color: var(--alert); }
   .callout p{ font-size: 14px; line-height: 1.65; color: var(--ink-soft); }
   .callout p b, .callout p strong{ color: var(--ink); font-weight: 600; }
 
   .cite{ font-family: var(--f-display); font-size: 11.5px; color: var(--ink-faint); line-height: 1.6; max-width: var(--measure); }
 
-  .todo{
-    border: 1.5px dashed var(--rule-strong);
-    background: var(--shade);
-    padding: 18px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: var(--measure);
-  }
-  .todo ol{ margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; font-size: 14px; color: var(--ink-soft); line-height: 1.55; }
-
   footer{ border-top: 1px solid var(--rule); padding-top: 16px; font-family: var(--f-display); font-size: 11px; color: var(--ink-faint); line-height: 1.7; max-width: var(--measure); }
 
-  /* ---------- responsive ---------- */
   @media (max-width: 900px){
     .canvas{ grid-template-columns: 1fr; grid-template-rows: none; }
     .blk-partners,.blk-value,.blk-segments,.stack-act,.stack-rel,.base{ grid-column: 1; grid-row: auto; }
     .stack{ grid-template-rows: none; }
     .base{ grid-template-columns: 1fr; }
     .escutas{ grid-template-columns: 1fr; }
+    .swot{ grid-template-columns: 1fr; }
   }
-  @media (max-width: 560px){
-    .metric{ grid-template-columns: 1fr; }
-  }
+  @media (max-width: 560px){ .metric{ grid-template-columns: 1fr; } }
 
-  /* ---------- print ---------- */
   @media print{
     @page{ size: A4; margin: 14mm; }
     body{ background: #fff; color: #000; padding: 0; font-size: 12pt; line-height: 1.5; }
     .sheet{ max-width: none; gap: 26px; }
     .page-break{ break-before: page; }
     .canvas{ border-color: #000; }
-    .blk li, .metric dd, .callout p, .escuta .fact{ color: #000; }
+    .blk li, .metric dd, .callout p, .escuta .fact, .swot-q li{ color: #000; }
     .no-print{ display: none !important; }
   }
 </style>
@@ -310,11 +201,12 @@
       Empreendedorismo na Medicina · 2º período · Atividade avaliativa domiciliar
     </div>
     <h1>Preparo que não chega</h1>
-    <p class="subtitle">Por que a orientação de preparo de exame se perde entre o balcão da marcação e a casa do paciente — e o que uma folha de papel resolve.</p>
+    <p class="subtitle">Três pacientes foram orientados sobre o preparo do exame. Nenhum recebeu nada por escrito. Dois perderam o exame. O que se perde entre o balcão da marcação e a casa do paciente — e o que uma folha de papel resolve.</p>
     <div class="byline">
       <span><b>Autor:</b> Nicolas Alves Henrique</span>
+      <span><b>Turma:</b> T11</span>
       <span><b>Orientação:</b> Prof.ª Dra. Maria dos Milagres Fernandes Diniz</span>
-      <span><b>Território:</b> Mossoró, RN</span>
+      <span><b>Território:</b> Mossoró, RN · setembro de 2026</span>
     </div>
   </header>
 
@@ -329,9 +221,9 @@
       <div class="blk blk-partners">
         <div class="blk-head"><span class="blk-n">08</span><span class="blk-t">Parcerias Principais</span></div>
         <ul>
-          <li>UBS e equipe da marcação, que entregam a folha no ato do carimbo.</li>
-          <li>Serviço que realiza o exame: hoje é quem barra o paciente na triagem e quem conhece a taxa real de falha.</li>
-          <li>Curso de Medicina da UFERSA e NIT, para validar o texto e o desenho.</li>
+          <li>UBS e equipe da marcação, que grampeiam a folha à requisição.</li>
+          <li>Serviço que realiza o exame: é quem barra o paciente na triagem e quem conhece a taxa real de falha.</li>
+          <li>Médico que solicita o exame, que valida o texto do preparo.</li>
         </ul>
       </div>
 
@@ -339,7 +231,7 @@
         <div class="blk">
           <div class="blk-head"><span class="blk-n">07</span><span class="blk-t">Atividades Principais</span></div>
           <ul>
-            <li>Redigir uma folha por tipo de exame, validada por quem prescreve.</li>
+            <li>Redigir uma folha por tipo de exame, em linguagem simples e letra grande.</li>
             <li>Grampear a folha à requisição, dentro do ato de carimbar.</li>
             <li>Contar todo mês os exames não realizados por preparo.</li>
           </ul>
@@ -347,7 +239,7 @@
         <div class="blk">
           <div class="blk-head"><span class="blk-n">06</span><span class="blk-t">Recursos Principais</span></div>
           <ul>
-            <li>Impressora laser e papel A4 comum, que a unidade já possui.</li>
+            <li>Impressora e papel A4 comum, que a unidade já possui.</li>
             <li>Texto do preparo validado clinicamente.</li>
             <li>Um grampeador no balcão.</li>
           </ul>
@@ -357,9 +249,9 @@
       <div class="blk blk-value">
         <div class="blk-head"><span class="blk-n">02</span><span class="blk-t">Proposta de Valor</span></div>
         <ul>
-          <li><b>O preparo deixa de depender da memória do paciente e do humor de quem atendeu no balcão.</b></li>
-          <li>Uma folha padronizada por exame, grampeada à requisição, com a data escrita à mão e a regra crítica destacada.</li>
-          <li>Menos exame perdido, menos viagem à toa, menos falta descontada no contracheque.</li>
+          <li><b>A orientação para de depender da memória do paciente ao longo de dois a quatro meses.</b></li>
+          <li>Folha padronizada por exame, grampeada à requisição — que o paciente é obrigado a levar no dia.</li>
+          <li>Letra grande, linguagem simples, regra crítica em destaque e campo em branco para a data, escrita à caneta.</li>
         </ul>
       </div>
 
@@ -368,14 +260,14 @@
           <div class="blk-head"><span class="blk-n">04</span><span class="blk-t">Relacionamento</span></div>
           <ul>
             <li>Sem cadastro, sem aplicativo, sem nenhuma ação exigida do paciente.</li>
-            <li>A folha é autoexplicativa e serve também a quem lê para o paciente.</li>
+            <li>Autoexplicativa: serve também a quem lê a folha para o paciente.</li>
           </ul>
         </div>
         <div class="blk">
           <div class="blk-head"><span class="blk-n">03</span><span class="blk-t">Canais</span></div>
           <ul>
             <li>O balcão da marcação, no momento do carimbo — o único instante em que serviço e paciente já estão frente a frente.</li>
-            <li>A porta da geladeira, destino nomeado espontaneamente por um entrevistado.</li>
+            <li>A própria requisição, que viaja com o paciente por obrigação.</li>
           </ul>
         </div>
       </div>
@@ -383,8 +275,8 @@
       <div class="blk blk-segments">
         <div class="blk-head"><span class="blk-n">01</span><span class="blk-t">Segmentos de Clientes</span></div>
         <ul>
-          <li>Usuário da UBS com exame agendado que exige preparo em casa: endoscopia, colonoscopia, exames com jejum.</li>
-          <li>Usuário sem rede pessoal na saúde a quem recorrer na véspera.</li>
+          <li>Usuário da UBS com exame agendado que exige preparo em casa: jejum, dieta, laxante, bexiga cheia.</li>
+          <li>Idosos e pessoas com baixa visão ou pouca escolaridade, para quem a folha é feita em letra grande.</li>
           <li>Equipe da marcação, que hoje explica de memória sob pressão de fila.</li>
         </ul>
       </div>
@@ -401,15 +293,15 @@
         <div class="blk">
           <div class="blk-head"><span class="blk-n">05</span><span class="blk-t">Fontes de Receita</span></div>
           <ul>
-            <li><b>Não há receita.</b> O modelo é custeado pelo material de expediente que a unidade já compra.</li>
-            <li>Sustentação possível por edital de extensão da UFERSA, PICI ou PIBIC.</li>
-            <li>Vender ou patrocinar a folha violaria o Art. 58 do Código de Ética Médica.</li>
+            <li><b>Não há receita.</b> Ninguém paga nada a ninguém, e o paciente jamais paga.</li>
+            <li>A conta é papel e tinta, e sai do material de expediente que a unidade já compra.</li>
+            <li>Vender a folha ou aceitar patrocínio de laboratório violaria o Art. 58 do Código de Ética Médica.</li>
           </ul>
         </div>
       </div>
     </div>
 
-    <p class="canvas-note"><b>Adaptação obrigatória em saúde.</b> Desfecho esperado: queda na proporção de exames não realizados por preparo inadequado, e consequente redução do tempo entre a solicitação e o diagnóstico. Risco ético: ver seção 4 — a folha transmite o preparo prescrito, jamais o decide.</p>
+    <p class="canvas-note"><b>Adaptação obrigatória em saúde.</b> Desfecho esperado: queda na proporção de exames não realizados por preparo inadequado, e consequente redução do tempo entre a solicitação e o diagnóstico. Risco ético: ver seção 04 — a folha transmite o preparo prescrito, jamais o decide.</p>
   </section>
 
   <!-- ============ ESCUTA ============ -->
@@ -420,36 +312,37 @@
     </div>
 
     <div class="prose" style="margin-bottom:24px">
-      <p>Um exame só funciona se o paciente executar algo antes: jejum, dieta sem resíduos, laxante na véspera, bexiga cheia, acompanhante para a sedação. Chama-se preparo. Quem o prescreve é o médico; quem o executa é o paciente, sozinho, em casa, semanas ou meses depois de ouvir a instrução uma única vez, em pé num balcão.</p>
-      <p>Nas três escutas realizadas em Mossoró em setembro de 2026, a orientação de preparo foi transmitida <b>exclusivamente por voz</b>, no ato da marcação, sem qualquer suporte escrito — nas três, sem exceção. O intervalo entre essa fala e o dia do exame variou de dois a quatro meses. Dois dos três entrevistados perderam um exame por preparo não cumprido.</p>
+      <p>Um exame só funciona se o paciente executar algo antes: jejum, dieta sem resíduos, laxante na véspera, bexiga cheia. Chama-se preparo. Quem o prescreve é o médico; quem o executa é o paciente, sozinho, em casa, semanas ou meses depois de ouvir a instrução uma única vez, em pé num balcão.</p>
+      <p><b>O achado central das três escutas não é falta de orientação — é o oposto.</b> Os três entrevistados foram orientados, e nenhum deles reclamou de não ter sido. Os três retiveram uma parte da instrução e perderam outra, ao longo de um intervalo de dois a quatro meses entre a marcação e o dia do exame. Nos três casos a orientação foi transmitida <b>exclusivamente por voz</b>, sem qualquer suporte escrito.</p>
+      <p>O ponto de ruptura, portanto, não é a transmissão: é a <b>retenção</b>. Pede-se à memória humana que carregue uma instrução técnica por um trimestre, sem lembrete, sem papel, sem a quem recorrer. Dois dos três perderam o exame exatamente aí.</p>
     </div>
 
     <div class="escutas">
       <article class="escuta">
         <div>
           <div class="who">Seu Raimundo</div>
-          <div class="role">Paciente · homem, 60+ anos<br>Exame de sangue · UBS de bairro</div>
+          <div class="role">Paciente · homem adulto<br>Exame de sangue · UBS de bairro</div>
         </div>
         <blockquote>“Só a por voz, né?”</blockquote>
-        <p class="fact">Recebeu orientação verbal, cumpriu e realizou o exame. Quando surge dúvida, recorre à internet. Aponta a espera como o custo dominante: “é de esperar que eu não gosto muito de esperar não, sabe?”</p>
+        <p class="fact">Recebeu orientação verbal sobre restrição alimentar, cumpriu e realizou o exame. Diz não se lembrar bem dos detalhes. Quando surge dúvida, recorre à internet. Aponta a espera como o custo dominante.</p>
       </article>
 
       <article class="escuta">
         <div>
           <div class="who">Dona Fátima</div>
-          <div class="role">Paciente · mulher, adulta<br>Exame de sangue · UBS de bairro</div>
+          <div class="role">Paciente · mulher adulta<br>Exame de sangue · UBS de bairro</div>
         </div>
-        <blockquote>“Depende muito da pessoa que estiver no atendimento.”</blockquote>
-        <p class="fact">Perdeu um exame por ter se alimentado: “não me lembrei, uma vez fui fazer um exame e me alimentei. Aí perdi o exame.” Teve de voltar outro dia só para remarcar, e estimou dois meses de atraso total.</p>
+        <blockquote>“Não me lembrei, uma vez fui fazer um exame e me alimentei. Aí perdi o exame.”</blockquote>
+        <p class="fact">Lembrou-se do dia do exame, esqueceu-se do jejum. Teve de voltar à unidade outro dia só para remarcar, e estimou dois meses de atraso total. Recorre à internet e a conhecidos da área da saúde quando tem dúvida.</p>
       </article>
 
       <article class="escuta">
         <div>
           <div class="who">Everaldo</div>
-          <div class="role">Paciente · homem, jovem adulto<br>Endoscopia digestiva alta · UBS + hospital</div>
+          <div class="role">Paciente · homem adulto<br>Endoscopia digestiva alta · UBS + hospital</div>
         </div>
         <blockquote>“Falar de boca pra um negócio que vai acontecer daqui a quatro meses é certeza de dar errado.”</blockquote>
-        <p class="fact">Cumpriu o jejum da manhã, esqueceu a restrição da noite anterior e foi barrado na triagem por risco de broncoaspiração sob sedação. Perdeu o exame, o dia de trabalho e o atestado — a falta veio descontada no contracheque.</p>
+        <p class="fact">Cumpriu o jejum da manhã e esqueceu-se da restrição da noite anterior. Foi barrado na triagem por não ter cumprido o preparo. Perdeu o exame, o dia de trabalho e o atestado — a falta veio descontada no contracheque.</p>
       </article>
     </div>
 
@@ -460,107 +353,130 @@
           <tr><th>Achado</th><th>Seu Raimundo</th><th>Dona Fátima</th><th>Everaldo</th></tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Orientação apenas verbal</td>
-            <td class="q">“só a por voz”</td>
-            <td class="q">“falada, falada”</td>
-            <td class="q">“só de boca”</td>
-          </tr>
-          <tr>
-            <td>Entregue no balcão da marcação</td>
-            <td>não especificou</td>
-            <td class="q">“geralmente é a enfermeira”</td>
-            <td class="q">“na hora de carimbar a requisição”</td>
-          </tr>
-          <tr>
-            <td>Intervalo até o exame</td>
-            <td>não especificou</td>
-            <td>cerca de 2 meses</td>
-            <td>quase 4 meses</td>
-          </tr>
-          <tr>
-            <td>Qualidade depende de quem atende</td>
-            <td>não abordou</td>
-            <td class="q">“tem gente que é chata”</td>
-            <td class="q">“depende de quem tá na mesa”</td>
-          </tr>
-          <tr>
-            <td>Canal de dúvida na véspera</td>
-            <td>internet</td>
-            <td>internet e rede pessoal</td>
-            <td>não abordado</td>
-          </tr>
-          <tr>
-            <td>Perdeu exame por preparo</td>
-            <td>não</td>
-            <td>sim</td>
-            <td>sim</td>
-          </tr>
+          <tr><td>Foi orientado</td><td>sim</td><td>sim</td><td>sim</td></tr>
+          <tr><td>Orientação apenas verbal</td><td class="q">“só a por voz”</td><td class="q">“falada, falada”</td><td class="q">“só de boca”</td></tr>
+          <tr><td>Recebeu algo por escrito</td><td>não</td><td>não</td><td>não</td></tr>
+          <tr><td>Intervalo até o exame</td><td>não especificou</td><td>cerca de 2 meses</td><td>quase 4 meses</td></tr>
+          <tr><td>Reteve a instrução inteira</td><td>sim</td><td>não</td><td>não</td></tr>
+          <tr><td>Perdeu o exame por preparo</td><td>não</td><td>sim</td><td>sim</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="callout" style="margin-top:24px">
-      <h3>O achado que reformula o problema</h3>
-      <p>A hipótese inicial era de esquecimento do paciente. As escutas apontam outra coisa: <b>duas das três pessoas atribuíram a qualidade da orientação a quem por acaso estava no balcão naquele dia.</b> Dona Fátima repetiu isso em três perguntas distintas, sem ser induzida; Everaldo descreveu a enfermeira explicando “rapidinho, porque tinha uma ruma de gente atrás esperando na fila”.</p>
-      <p>A falha, portanto, não é de memória individual — é de <b>processo não padronizado</b>. O preparo é entregue de forma diferente conforme o servidor, o dia e o tamanho da fila. A folha impressa não corrige o paciente: corrige a variabilidade do serviço, estabelecendo um piso mínimo de informação que independe de quem atende.</p>
+      <h3>Dois momentos distintos, e só um deles a folha resolve</h3>
+      <p><b>No momento da orientação</b>, a qualidade da explicação varia conforme quem está no balcão e o tamanho da fila. Everaldo descreveu a enfermeira explicando “rapidinho, porque tinha uma ruma de gente atrás esperando na fila”. Dona Fátima observou que entender o que lhe dizem “depende muito da pessoa que estiver no atendimento”. A folha padronizada resolve isto: garante um piso mínimo de informação, idêntico para todos, independente do dia e do servidor.</p>
+      <p><b>No dia do exame</b>, quando o preparo falhou, o paciente é repreendido em público. Everaldo relatou ter tomado “um carão de graça no meio do corredor”; Dona Fátima pediu que o profissional fosse “mais gentil, não esculhambar”. Este é um problema de educação profissional, e a folha não o corrige. O que ela faz é <b>evitar que se chegue a esse momento</b> — e isso, por si, já elimina a maior parte das ocasiões em que a repreensão acontece.</p>
+    </div>
+
+    <div class="callout" style="margin-top:16px">
+      <h3>Por que grampear, e não entregar</h3>
+      <p>A requisição é obrigatória para realizar o exame: sem ela o paciente não é atendido. Uma folha grampeada à requisição, portanto, <b>viaja junto por obrigação</b> — não depende de o paciente guardar, lembrar ou dar importância, e não depende de a atendente se lembrar de entregar um segundo papel. O veículo já existe e já é compulsório. Esta é a diferença entre uma medida de desenho e uma medida de boa vontade: uma folha solta numa pilha do balcão deixa de ser distribuída em duas semanas.</p>
     </div>
 
     <div class="callout warn" style="margin-top:16px">
       <h3>Limitações da escuta, declaradas</h3>
-      <p>Dois dos três entrevistados <b>trabalham no condomínio onde resido</b>. Existe assimetria de posição, e parte da concordância pode refletir cortesia com o morador, não convicção. O terceiro é <b>colega de curso na UFERSA</b>, sem essa relação — e foi justamente ele quem trouxe o relato mais crítico e mais detalhado, o que sugere que a assimetria de fato pesou nas duas primeiras conversas.</p>
+      <p>Dois dos três entrevistados <b>trabalham no condomínio onde resido</b>. Existe assimetria de posição, e parte da concordância pode refletir cortesia com o morador. O terceiro é <b>colega de outro curso da UFERSA</b>, sem essa relação — e foi justamente ele quem trouxe o relato mais crítico e mais detalhado, o que sugere que a assimetria pesou nas duas primeiras conversas.</p>
       <p>Nenhum profissional do serviço foi ouvido. As afirmações sobre o processo interno da marcação derivam do relato de usuários, não de observação direta nem de entrevista com a equipe. Esta é a principal fragilidade do trabalho e a primeira lacuna a fechar.</p>
+    </div>
+  </section>
+
+  <!-- ============ SWOT ============ -->
+  <section class="page-break">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2>Análise SWOT do modelo</h2>
+    </div>
+
+    <div class="swot">
+      <div class="swot-q pos">
+        <h3><span>INTERNO</span> Forças</h3>
+        <ul>
+          <li><b>Custo quase nulo:</b> papel e tinta que a unidade já compra.</li>
+          <li>Roda dentro de um ato que já é obrigatório — o carimbo da requisição.</li>
+          <li>Não exige aplicativo, cadastro, sinal de internet nem letramento digital.</li>
+          <li>Não coleta dado pessoal: nasce fora do alcance da LGPD.</li>
+        </ul>
+      </div>
+      <div class="swot-q neg">
+        <h3><span>INTERNO</span> Fraquezas</h3>
+        <ul>
+          <li><b>Depende de a equipe grampear.</b> Folha solta no balcão morre em duas semanas.</li>
+          <li>Não alcança quem não lê e mora sozinho.</li>
+          <li>Exige revisar o texto sempre que o protocolo do exame mudar.</li>
+          <li>Não resolve fila, espera nem ausência do profissional no dia.</li>
+        </ul>
+      </div>
+      <div class="swot-q pos">
+        <h3><span>EXTERNO</span> Oportunidades</h3>
+        <ul>
+          <li>Alinha-se à atenção primária, eixo do curso e da própria UBS.</li>
+          <li>Replicável por outras unidades sem custo de licença nem autorização.</li>
+          <li><b>Vaga não perdida é vaga liberada</b> para o próximo da fila.</li>
+          <li>Cabe em edital de extensão universitária, se houver interesse em ampliar.</li>
+        </ul>
+      </div>
+      <div class="swot-q neg">
+        <h3><span>EXTERNO</span> Ameaças</h3>
+        <ul>
+          <li>Rotatividade da equipe da marcação desfaz o hábito.</li>
+          <li>Falta de papel ou impressora na unidade interrompe tudo.</li>
+          <li>Patrocínio de laboratório ou farmácia contaminaria o material.</li>
+          <li><b>Risco de a folha ser lida como prescrição</b> e contrariar orientação individual do médico.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <!-- ============ DESFECHO ============ -->
   <section class="page-break">
     <div class="sec-head">
-      <span class="sec-num">02</span>
-      <h2>Desfecho clínico e forma de medição</h2>
+      <span class="sec-num">03</span>
+      <h2>Desfecho e indicadores</h2>
     </div>
 
     <div class="prose" style="margin-bottom:22px">
-      <p>O desfecho sanitário perseguido é a <b>redução da proporção de exames não realizados por preparo inadequado</b>. O desfecho clínico que dela decorre é a redução do intervalo entre a solicitação do exame e a conduta que ele permite — no caso de Everaldo, quatro meses de espera que a perda do exame duplicou, com a azia persistindo o tempo todo sem diagnóstico.</p>
+      <p>O desfecho sanitário perseguido é a <b>redução da proporção de exames não realizados por preparo inadequado</b>. O desfecho clínico que dele decorre é a redução do intervalo entre a solicitação do exame e a conduta que ele permite — no caso de Everaldo, quatro meses de espera que a perda do exame duplicou, com o sintoma persistindo o tempo todo sem diagnóstico.</p>
+      <p>Adotam-se dois indicadores, e não um. O de resultado diz se o problema diminuiu; o de processo diz se a solução chegou a ser aplicada. Sem o segundo, um resultado ruim não distingue <b>ideia errada</b> de <b>ideia não executada</b>.</p>
     </div>
 
     <dl class="metrics">
       <div class="metric">
-        <dt>Indicador primário</dt>
-        <dd>Percentual de exames não realizados por preparo inadequado, sobre o total de exames agendados no mês, no serviço que realiza endoscopia e colonoscopia.</dd>
+        <dt>Indicador de resultado</dt>
+        <dd>Percentual de exames não realizados por preparo inadequado, sobre o total de exames agendados no mês, no serviço que os realiza. <i>Exemplo de leitura: de 200 exames agendados, 24 não foram feitos por preparo — 12%.</i></dd>
       </div>
       <div class="metric">
         <dt>Como medir</dt>
-        <dd>Um campo único acrescentado à ficha de triagem do serviço: <i>exame não realizado — motivo: preparo / falta / outro</i>. Linha de base coletada nos 30 dias anteriores ao piloto; medição de efeito aos 90 dias.</dd>
+        <dd>Um campo único acrescentado à ficha de triagem: <i>exame não realizado — motivo: preparo / falta / outro</i>. Linha de base coletada nos 30 dias anteriores ao piloto; nova medição aos 90 dias.</dd>
       </div>
       <div class="metric">
         <dt>Indicador de processo</dt>
-        <dd>Percentual de requisições que saem do balcão com a folha grampeada, aferido por contagem de 20 requisições sorteadas por semana. Mede a adesão da equipe, não a do paciente — é o indicador que realmente diz se o modelo está de pé.</dd>
+        <dd>Percentual de requisições que saem do balcão com a folha grampeada, aferido por contagem de 20 requisições sorteadas por semana. Mede a equipe, não o paciente.</dd>
       </div>
       <div class="metric fail">
         <dt>Critério de fracasso</dt>
-        <dd>Se após 60 dias menos de 70% das requisições saírem grampeadas, o gargalo é a entrega e não o material. Nesse caso o piloto fracassou e a solução precisa ser redesenhada — não reforçada com mais treinamento.</dd>
+        <dd>Se após 60 dias menos de 70% das requisições saírem grampeadas, o gargalo é a entrega e não o material: o piloto fracassou e a solução precisa ser redesenhada, não reforçada com treinamento.</dd>
       </div>
     </dl>
 
     <div class="callout" style="margin-top:22px">
-      <h3>Por que este indicador e não a satisfação do paciente</h3>
-      <p>Satisfação sobe com qualquer intervenção visível e não distingue efeito de novidade. Exame não realizado é um evento discreto, contável, já observado pela triagem e com consequência clínica direta. É o número que a gestão entende e o único que sobrevive a uma pergunta cética.</p>
+      <h3>Por que não medir mortalidade nem satisfação</h3>
+      <p>Mortalidade é o indicador mais nobre em saúde, mas é inútil aqui: ninguém morre de exame perdido em número mensurável dentro de 90 dias. Satisfação, por sua vez, sobe com qualquer intervenção visível e não distingue efeito de novidade. Exame não realizado é um evento discreto, contável, já observado pela triagem e com consequência clínica direta — é o número mais próximo do ato que ainda carrega significado clínico.</p>
     </div>
   </section>
 
   <!-- ============ ÉTICA ============ -->
   <section class="page-break">
     <div class="sec-head">
-      <span class="sec-num">03</span>
+      <span class="sec-num">04</span>
       <h2>Análise ética</h2>
     </div>
 
     <div class="prose">
-      <p>A versão intuitiva desta solução — uma mensagem de WhatsApp com o preparo, ou uma folha personalizada com o nome e o exame do paciente — carrega risco imediato de <b>quebra de sigilo profissional</b>. Um grupo de WhatsApp expõe o telefone de cada participante aos demais e, pelo próprio nome do grupo, revela que aquelas pessoas realizarão determinado exame. Uma folha nominal esquecida na geladeira, num domicílio compartilhado, revela a mesma coisa. O sigilo, tratado no Capítulo IX do Código de Ética Médica (Resolução CFM nº 2.217/2018), veda ao médico revelar fato de que tenha conhecimento em razão do exercício profissional.</p>
-      <p>O modelo aqui proposto <b>elimina esse risco por desenho, não por cuidado operacional</b>: a folha é padronizada por tipo de exame e não por paciente. Não traz nome, número de prontuário nem diagnóstico. Só o preparo, que é informação pública e idêntica para todos que farão aquele exame. O único dado que a folha recebe é a data, escrita à mão pelo próprio paciente ou pela atendente. Nenhum registro é criado, nenhuma base de dados é constituída, e portanto não há tratamento de dado pessoal sensível na acepção da LGPD.</p>
-      <p>Permanece um risco residual de natureza diferente, e ele é o que exige vigilância. Uma folha padronizada pode ser lida como prescrição. Se o texto disser “jejum de doze horas” e o médico de um paciente específico houver determinado outra conduta — pela diabetes, pelo anticoagulante, pela idade — a folha estará contradizendo o ato médico individual. Por isso o material deve trazer, em posição fixa e destacada, a advertência de que as orientações são gerais e que qualquer instrução dada pelo médico assistente prevalece sobre a folha. <b>A folha transmite o preparo prescrito; jamais o decide.</b></p>
-      <p>Por fim, o limite que fecha o modelo. O Art. 58 veda ao médico o exercício mercantilista da Medicina, e o Princípio Fundamental IX estabelece que a Medicina não pode, em nenhuma circunstância ou forma, ser exercida como comércio. Orientar sobre preparo é dever do serviço, já custeado pelo SUS. No instante em que essa folha for vendida ao paciente, patrocinada por laboratório ou usada para direcionar exames a um prestador determinado, o modelo deixa de ser uma correção de processo e passa a ser captação — hipótese que os Arts. 59 e 69 alcançam diretamente. A gratuidade e a ausência de marca não são detalhes de implementação: são a condição de existência ética do modelo.</p>
+      <p>A versão intuitiva desta solução — uma mensagem de WhatsApp com o preparo, ou uma folha personalizada com o nome e o exame do paciente — carrega risco imediato de <b>quebra de sigilo profissional</b>. Um grupo de WhatsApp expõe o telefone de cada participante aos demais e, pelo próprio nome do grupo, revela que aquelas pessoas realizarão determinado exame. Uma folha nominal esquecida sobre a mesa, num domicílio compartilhado, revela a mesma coisa. O sigilo, tratado no Capítulo IX do Código de Ética Médica (Resolução CFM nº 2.217/2018), veda revelar fato de que se tenha conhecimento em razão do exercício profissional.</p>
+      <p>O modelo aqui proposto <b>elimina esse risco por desenho, e não por cuidado operacional</b>: a folha é padronizada por tipo de exame, não por paciente. Não traz nome, número de prontuário nem diagnóstico — apenas o preparo, que é idêntico para todos que farão aquele exame. O único campo preenchido é a data, escrita à caneta no balcão. Nenhum registro é criado e nenhuma base de dados é constituída; não há, portanto, tratamento de dado pessoal sensível na acepção da Lei nº 13.709/2018. O modelo não foi adequado à LGPD: foi desenhado fora do alcance dela.</p>
+      <p>Permanece um risco residual de natureza distinta, e é o que exige vigilância. Uma folha padronizada pode ser lida como prescrição. Se o texto disser “jejum de doze horas” e o médico de um paciente específico houver determinado outra conduta — pela diabetes, pelo anticoagulante, pela idade — a folha estará contradizendo o ato médico individual. Por isso o material deve trazer, em posição fixa e destacada, a advertência de que as orientações são gerais e que qualquer instrução do médico assistente prevalece sobre elas. <b>A folha transmite o preparo prescrito; jamais o decide.</b></p>
+      <p>Por fim, o limite que fecha o modelo. O <b>Art. 58</b> veda ao médico o exercício mercantilista da Medicina, e o Princípio Fundamental IX estabelece que a Medicina não pode, em nenhuma circunstância ou forma, ser exercida como comércio. Orientar sobre preparo é dever do serviço, já custeado pelo SUS. No instante em que essa folha for vendida ao paciente, patrocinada por laboratório ou usada para direcionar exames a um prestador determinado, ela deixa de ser correção de processo e passa a ser captação — hipótese que os Arts. 59 e 69 alcançam diretamente. A gratuidade e a ausência de marca não são detalhes de implementação: são a condição de existência ética do modelo.</p>
     </div>
 
     <p class="cite" style="margin-top:16px">Resolução CFM nº 2.217/2018 — Código de Ética Médica: Princípio Fundamental IX; Arts. 58, 59 e 69; Capítulo IX (Sigilo Profissional). Lei nº 13.709/2018 (LGPD), art. 5º, II, quanto a dado pessoal sensível.</p>
@@ -569,28 +485,18 @@
   <!-- ============ REFLEXÃO ============ -->
   <section class="page-break">
     <div class="sec-head">
-      <span class="sec-num">04</span>
+      <span class="sec-num">05</span>
       <h2>Reflexão final</h2>
     </div>
 
-    <div class="todo no-print">
-      <h3>Este parágrafo é seu — escreva à mão antes de gerar o PDF</h3>
-      <p style="font-size:14px;color:var(--ink-soft);line-height:1.6">A rubrica pede um parágrafo autoral sobre o que o exercício mudou na forma de entender o próprio papel como médico. Ninguém pode escrevê-lo por você, e se este trabalho for escolhido para a roda de conversa, é este parágrafo que você vai defender. Três coisas realmente aconteceram e podem servir de matéria-prima:</p>
-      <ol>
-        <li>Você entrou achando que o problema era o paciente esquecer. As escutas mostraram que o problema é o serviço entregar diferente conforme quem está no balcão.</li>
-        <li>A pessoa entrevistada propôs a solução antes de você: “o que falta é só um papel impresso”.</li>
-        <li>A primeira entrevista falhou porque você ofereceu a resposta dentro da pergunta — e foi ao corrigir isso que a segunda e a terceira renderam.</li>
-      </ol>
-    </div>
-
-    <div class="prose" style="margin-top:18px">
-      <p style="color:var(--ink-faint);font-style:italic">[ Substituir este espaço pelo parágrafo autoral. ]</p>
+    <div class="prose">
+      <p>Entrei neste trabalho procurando um problema de saúde grande e saí com um pequeno. Estudar numa faculdade que privilegia a medicina de família e comunidade me fez olhar para a UBS antes de qualquer outro lugar, e ali o problema estava à mão: o preparo do exame. Exame que já é difícil de marcar, difícil de conseguir que no dia o profissional esteja lá — e que a pessoa ainda perde por não ter cumprido um preparo que lhe foi explicado de boca, meses antes. O que me marcou nas três conversas não foi ninguém reclamar de falta de orientação: todos foram orientados. O que falhou foi a orientação sobreviver ao intervalo. E quando falha, quem se sente culpado e leva o esculhambo é o paciente, por uma coisa que a própria unidade poderia ter evitado com uma folha de papel. Eu não havia percebido, antes de perguntar, que existe assimetria até em a quem recorrer quando bate a dúvida na véspera: uns têm conhecido na área da saúde, outros têm o Google, outros não têm nada — e isso vale para mim também, que sinto medo antes de cada exame de sangue, medo de ter feito alguma coisa errada e não poder fazê-lo. O que mais me convenceu da solução foi perceber que ela não depende de ninguém querer: a requisição é obrigatória para realizar o exame, então a folha grampeada nela viaja junto, sem que o paciente precise guardar, lembrar ou se importar. Não posso afirmar que ninguém nunca tenha tentado isso, mas nas unidades que conheci em Mossoró e nas aulas de ATS eu não vi esse passo existir: vi muita peleja para marcar, para esperar e para receber resultado, e nenhuma atenção ao que acontece entre a marcação e o dia. Aprendi, sobretudo, que solução não se inventa na mesa — ela aparece quando se pergunta à pessoa qual é a queixa dela e se escuta até o fim.</p>
     </div>
   </section>
 
   <footer>
     Trabalho individual · Empreendedorismo na Medicina · UFERSA, Campus Mossoró · setembro de 2026.<br>
-    Os nomes dos entrevistados são fictícios, conforme exigido pela atividade. As falas são transcrições literais de entrevistas gravadas com consentimento verbal.
+    Os nomes dos entrevistados são fictícios, conforme exigido pela atividade. As falas reproduzidas são transcrições de entrevistas gravadas com consentimento verbal.
   </footer>
 
 </div>
